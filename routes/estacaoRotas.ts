@@ -9,14 +9,14 @@ const config = dbConfig()
 
 
 router.post('/cadastrar', async(req,res)=>{
-    const {cod_usuario, nome, macAdress , cidade, estado, numero, cep} = req.body
+    const { nome, macAdress , cidade, estado, numero, cep} = req.body
 
-    if(!cod_usuario || !nome || !macAdress || !cidade|| !estado || !numero || !cep){
+    if( !nome || !macAdress || !cidade|| !estado || !numero || !cep){
         return res.status(400).send("Falha ao cadastrar a Estação,  verifique as informações")
     }
     try{
         const connection = await mysql.createConnection(config)
-        const [result] = await connection.execute('INSERT INTO Estacao (cod_usuario, nome, macAdress, cidade, estado, numero, cep) VALUES (?, ?, ?, ?, ?, ?, ?)', [cod_usuario, nome, macAdress , cidade, estado, numero, cep])
+        const [result] = await connection.execute('INSERT INTO Estacao (nome, macAdress, cidade, estado, numero, cep) VALUES (?, ?, ?, ?, ?, ?)', [nome, macAdress , cidade, estado, numero, cep])
 
         await connection.end()
 
@@ -62,12 +62,12 @@ router.get('/buscar/:id', async(req, res)=>{
 
 router.put('/atualizar/:id', async(req, res)=>{
     const {id} = req.params;
-    const {cod_usuario, nome, macAdresss , cidade, estado, numero, cep} = req.body;
+    const {cod_usuario, nome, macAdress , cidade, estado, numero, cep} = req.body;
 
     try{
         const connection = await mysql.createConnection(config)
 
-        const [result] = await connection.execute<ResultSetHeader>('UPDATE Estacao SET cod_usuario = ?, nome = ?, macAdresss = ? , cidade = ?, estado = ?, numero =?, cep = ?, WHERE cod_estacao = ?', [cod_usuario, nome, macAdresss , cidade, estado, numero, cep, id])
+        const [result] = await connection.execute<ResultSetHeader>('UPDATE Estacao SET nome = ?, macAdress = ?, cidade = ?, estado = ?, numero = ?, cep = ? WHERE cod_estacao = ?', [nome, macAdress, cidade, estado, numero, cep, id])
 
         await connection.end()
 

@@ -61,7 +61,7 @@ create table Dados (
     hora varchar(12),
     valor int,
     foreign key (cod_parametro) references Parametro (cod_parametro),
-    foreign key (cod_estacao) references Parametro (cod_estacao),
+    foreign key (cod_estacao) references Estacao (cod_estacao),
 	foreign key (cod_tipoParametro) references Parametro (cod_tipoParametro)
 );
 

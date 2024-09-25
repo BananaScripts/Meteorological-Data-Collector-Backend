@@ -1,10 +1,13 @@
 import express from "express";
+import cors from "cors"; 
 import { userRouter, alarmRouter, stationRouter, paramRouter, paramTypeRouter } from "./routes/index"
 
 const server = express();
 const PORT = 3002;
 
 server.use(express.json())
+
+server.use(cors());
 
 server.get('/', (req, res) =>{
     res.send("Servidor rodando.")
