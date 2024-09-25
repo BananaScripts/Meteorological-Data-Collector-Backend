@@ -1,3 +1,4 @@
+use Meteorological_Data_Collector;
 
 SHOW CREATE TABLE Estacao;
 SHOW CREATE TABLE TipoParametro;
