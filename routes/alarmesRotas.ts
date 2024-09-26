@@ -2,144 +2,151 @@ import { Router } from "express";
 import mysql, { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import dbConfig from "../dbconfig";
 
+const router = Router();
+const config = dbConfig();
 
-const router = Router()
+// Rota para cadastrar alarme
+router.post('/cadastrar', async (req, res) => {
+    const { nome, valor, condicao, cod_tipoParametro } = req.body;
 
-const config = dbConfig()
-
-
-
-router.post('/cadastrar', async(req,res)=>{
-    const {nome, valor} = req.body
-
-    if(!nome || !valor){
-        return res.status(400).send("Falha ao cadastrar o alarme, verifique as credenciais")
+    if (!nome || !valor || !condicao || !cod_tipoParametro) {
+        return res.status(400).send("Falha ao cadastrar o alarme, dados ausentes");
     }
-    try{
-        const connection = await mysql.createConnection(config)
 
-        try{
-            const [result] = await connection.execute('Insert into Alarme (nome, valor) VALUES (?, ?)', [nome, valor])
-
-            await connection.end()
-    
-            res.status(201).send('Alarme criado com sucesso')
-
-        } catch(err){
-            res.status(500).send('Erro em cadastrar um Alarme')
-        }
-
-    } catch(err){
-        res.status(500).send('Erro ao conectar com o Banco de Dados')
-    }
-})
-
-
-
-router.get('/listar', async(req, res)=>{
-    try{
-        const connection = await mysql.createConnection(config)
+    try {
+        const connection = await mysql.createConnection(config);
 
         try {
+            const [result] = await connection.execute('INSERT INTO Alarme (nome, valor, condicao, cod_tipoParametro) VALUES (?, ?, ?, ?)', [nome, valor, condicao, cod_tipoParametro]);
 
-            const [rows] = await connection.query('Select * from Alarme')
-            connection.end()
-            res.json(rows)
+            await connection.end();
 
-        } catch(err){
-            res.status(500).send("Falha ao buscar os alarmes")
+            res.status(201).send("Alarme cadastrado com sucesso");
+        } catch (err) {
+            await connection.end();
+            res.status(500).send("Erro ao cadastrar o alarme");
+            console.error(err);
         }
-
-
-    } catch(err){
-        res.status(500).send("Falha ao conectar com o Banco de Dados")
-    }
-})
-
-router.get('/buscar/:id', async (req, res)=>{
-    const {id} = req.params;
-
-    try{
-        const connection = await mysql.createConnection(config)
-        const [rows] = await connection.execute<RowDataPacket[]>('SELECT * FROM Alarme WHERE cod_alarme = ?', [id])
-
-        await connection.end()
-
-        if(rows.length === 0){
-            return res.status(404).send('Alarme não encontrado.')
-        }
-
-        res.send(rows)
-    }catch(err){
-        res.status(500).send("Erro ao encontrar alarme.")
+    } catch (err) {
+        res.status(500).send("Erro ao conectar com o banco de dados");
         console.error(err);
     }
-})
+});
 
+// Rota para listar todos os alarmes
+router.get('/listar', async (req, res) => {
+    try {
+        const connection = await mysql.createConnection(config);
 
-router.put('/atualizar/:id', async(req, res)=>{
-    const {id} = req.params;
-    const {nome, valor} = req.body;
+        try {
+            const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM Alarme');
+            await connection.end();
+            res.json(rows);
+        } catch (err) {
+            await connection.end();
+            res.status(500).send("Erro ao listar os alarmes");
+            console.error(err);
+        }
+    } catch (err) {
+        res.status(500).send("Erro ao conectar com o banco de dados");
+        console.error(err);
+    }
+});
 
-    try{
-        const connection = await mysql.createConnection(config)
+// Rota para buscar um alarme específico pelo ID
+router.get('/buscar/:id', async (req, res) => {
+    const { id } = req.params;
 
-        try{
+    try {
+        const connection = await mysql.createConnection(config);
 
-            const [result] = await connection.execute<ResultSetHeader>('Update Alarme set nome = ?, valor = ?, WHERE cod_alarme = ?', [nome, valor, id])
+        try {
+            const [rows] = await connection.execute<RowDataPacket[]>('SELECT * FROM Alarme WHERE cod_alarme = ?', [id]);
+            await connection.end();
 
-            await connection.end()
-    
-            if(result.affectedRows === 0){
-                return res.status(404).send('Alarme não encontrado.')
+            if (rows.length === 0) {
+                return res.status(404).send('Alarme não encontrado');
             }
 
-            res.status(201).send('Alarme atualizado com sucesso')
-
-        } catch(err){
-            res.status(500).send('Erro ao atualizar alarme.')
-            console.error(err)
+            res.json(rows[0]);
+        } catch (err) {
+            await connection.end();
+            res.status(500).send("Erro ao buscar o alarme");
+            console.error(err);
         }
-        
-    } catch(err){
-        res.status(500).send('Erro ao conectar com o Banco de Dados.')
-        console.error(err)
+    } catch (err) {
+        res.status(500).send("Erro ao conectar com o banco de dados");
+        console.error(err);
     }
-})
+});
 
 
+router.put('/atualizar/:id', async (req, res) => {
+    const { id } = req.params;
+    const { nome, valor, condicao, cod_tipoParametro } = req.body;
 
-router.delete('/deletar/:id', async(req, res)=>{
-    const {id} = req.params;
+    if (!nome || !valor || !condicao || !cod_tipoParametro) {
+        return res.status(400).send("Erro ao atualizar o alarme, dados ausentes");
+    }
 
-    try{
+    try {
+        const connection = await mysql.createConnection(config);
 
-        const connection = await mysql.createConnection(config)
-
-
-        try{
+        try {
+            const [result] = await connection.execute<ResultSetHeader>(
+                'UPDATE Alarme SET nome = ?, valor = ?, condicao = ?, cod_tipoParametro = ? WHERE cod_alarme = ?',
+                [nome, valor, condicao, cod_tipoParametro, id]
+            );
             
 
-            const [result] = await connection.execute<ResultSetHeader>('Delete from Alarme where cod_alarme = ?', [id])
+            await connection.end();
 
-            await connection.end()
-
-            if(result.affectedRows === 0){
-                res.send(404).send('Alarme não encontrado.')
+            if (result.affectedRows === 0) {
+                return res.status(404).send("Alarme não encontrado");
             }
 
-        } catch(err){
-            res.status(500).send("Falha ao deletar o Alarme escolhido")
+            res.status(200).send("Alarme atualizado com sucesso");
+        } catch (err) {
+            await connection.end();
+            res.status(500).send("Erro ao atualizar o alarme");
+            console.error(err);
         }
-
-
-
-    } catch(err){
-        res.status(500).send("Falha ao conectar ao Banco de Dados")
+    } catch (err) {
+        res.status(500).send("Erro ao conectar com o banco de dados");
+        console.error(err);
     }
-    
+});
 
-})
 
+// Rota para deletar um alarme pelo ID
+router.delete('/deletar/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const connection = await mysql.createConnection(config);
+
+        try {
+            const [result] = await connection.execute<ResultSetHeader>(
+                'DELETE FROM Alarme WHERE cod_alarme = ?',
+                [id]
+            );
+
+            await connection.end();
+
+            if (result.affectedRows === 0) {
+                return res.status(404).send("Alarme não encontrado");
+            }
+
+            res.status(200).send("Alarme deletado com sucesso");
+        } catch (err) {
+            await connection.end();
+            res.status(500).send("Erro ao deletar o alarme");
+            console.error(err);
+        }
+    } catch (err) {
+        res.status(500).send("Erro ao conectar com o banco de dados");
+        console.error(err);
+    }
+});
 
 export default router;
