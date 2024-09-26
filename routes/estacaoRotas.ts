@@ -62,7 +62,7 @@ router.get('/buscar/:id', async(req, res)=>{
 
 router.put('/atualizar/:id', async(req, res)=>{
     const {id} = req.params;
-    const {cod_usuario, nome, macAdress , cidade, estado, numero, cep} = req.body;
+    const {nome, macAdress , cidade, estado, numero, cep} = req.body;
 
     try{
         const connection = await mysql.createConnection(config)
