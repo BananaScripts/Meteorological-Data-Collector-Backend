@@ -8,16 +8,16 @@ const config = dbConfig()
 
 router.post('/cadastrar', async (req, res)=>{
 
-    const {cod_usuario, nome, fator, offset, unidadeMedida} = req.body
+    const { nome, fator, offset, unidadeMedida} = req.body
 
     try{
         const connection = await mysql.createConnection(config)
 
-        if(!cod_usuario || !nome || !fator || !offset || !unidadeMedida){
+        if(!nome || !fator || !offset || !unidadeMedida){
             return res.status(400).send("Erro ao cadastrar tipo de parâmetro, algumas informações estão ausentes")
         }
 
-        const [result] = await connection.execute("INSERT INTO TipoParametro (cod_usuario, nome, fator, offset, unidadeMedida) VALUES (?, ?, ?, ?, ?)", [cod_usuario, nome, fator, offset, unidadeMedida])
+        const [result] = await connection.execute("INSERT INTO TipoParametro ( nome, fator, offset, unidadeMedida) VALUES (?, ?, ?, ?)", [nome, fator, offset, unidadeMedida])
 
         await connection.end()
 
@@ -67,13 +67,13 @@ router.put('/atualizar/:id', async(req, res)=>{
     const {id} = req.params
     const {cod_usuario, nome, fator, offset, unidadeMedida} = req.body
 
-    if(!cod_usuario || !nome || !fator || !offset || !unidadeMedida){
+    if(!nome || !fator || !offset || !unidadeMedida){
         return res.status(400).send("Erro ao atualizar tipo de parâmetro, dados vazios.")
     }
 
     try{
         const connection = await mysql.createConnection(config)
-        const [result] = await connection.execute<ResultSetHeader>("UPDATE TipoParametro SET cod_usuario = ?, nome = ?, fator = ?, offset = ?, unidadeMedida = ? WHERE cod_tipoParametro = ?", [cod_usuario, nome, fator, offset, unidadeMedida, id])
+        const [result] = await connection.execute<ResultSetHeader>("UPDATE TipoParametro SET nome = ?, fator = ?, offset = ?, unidadeMedida = ? WHERE cod_tipoParametro = ?", [nome, fator, offset, unidadeMedida, id])
 
         await connection.end()
 
