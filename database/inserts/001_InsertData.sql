@@ -15,8 +15,3 @@ VALUES (1, 1);
 INSERT INTO Dados (cod_parametro, cod_estacao, cod_tipoParametro, data, hora, valor)
 VALUES (1, 1, 1, '2024-09-24', '14:30', 25);
 
-INSERT INTO Alarme (nome, valor, condicao, cod_tipoParametro)
-VALUES ('Alarme Temperatura Alta', '30', '>', 1);
-
-INSERT INTO ChangeLog (responsavel, data, descricao)
-VALUES ('Hudson', '2024-09-26', 'Descrição do changelog');
