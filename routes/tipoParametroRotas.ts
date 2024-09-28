@@ -13,7 +13,7 @@ router.post('/cadastrar', async (req, res)=>{
     try{
         const connection = await mysql.createConnection(config)
 
-        if(!nome || !fator || !offset || !unidadeMedida){
+        if(!nome || !fator || offset === undefined || !unidadeMedida){
             return res.status(400).send("Erro ao cadastrar tipo de parâmetro, algumas informações estão ausentes")
         }
 
@@ -67,7 +67,7 @@ router.put('/atualizar/:id', async(req, res)=>{
     const {id} = req.params
     const {cod_usuario, nome, fator, offset, unidadeMedida} = req.body
 
-    if(!nome || !fator || !offset || !unidadeMedida){
+    if(!nome || !fator || offset === undefined || !unidadeMedida){
         return res.status(400).send("Erro ao atualizar tipo de parâmetro, dados vazios.")
     }
 
