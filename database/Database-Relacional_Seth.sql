@@ -79,6 +79,11 @@ create table ChangeLog (
 );
 
 
+INSERT INTO Usuario (nome, dataNascimento, cpf, email, senha) VALUES 
+('João Silva', '1985-05-20', '12345678901', 'joao@example.com', 'senha123'),
+('Maria Oliveira', '1990-08-15', '10987654321', 'maria@example.com', 'senha456');
+
+
 Select * from ChangeLog;
 Select * from Usuario;
 Select * from Parametro;

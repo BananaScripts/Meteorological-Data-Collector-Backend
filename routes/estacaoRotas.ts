@@ -1,6 +1,7 @@
 import { Router } from "express";
 import mysql, { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import dbConfig from "../dbconfig";
+import { connect } from "http2";
 
 
 const router = Router()
@@ -100,6 +101,44 @@ router.delete('/deletar/:id', async(req, res) =>{
         console.error(err)
     }
 })
+
+router.post('/dados', async(req,res) => {
+    const {cod_estacao, cod_tipoParametro, data, hora, valor} = req.body
+
+    if (!cod_estacao || !cod_tipoParametro || !data || !hora || !valor) {
+        return res.status(400).send("Dados ausentes");
+    }
+    console.log({cod_estacao, cod_tipoParametro, data, hora, valor});
+
+    try{
+        const connection = await mysql.createConnection(config)
+        await connection.execute(
+            'INSERT INTO Dados (cod_estacao, cod_tipoParametro, data, hora, valor) VALUES (?, ?, ?, ?, ?)',
+            [cod_estacao, cod_tipoParametro, data, hora, valor]
+        );
+        await connection.end()
+        res.status(201).send("Dados cadastrados")
+    }catch(e){
+        res.status(500).send("Erro ao cadastrar")
+        console.error(e)
+    }
+
+})
+
+router.get('/listarDados', async (req, res) => {
+    try {
+        const connection = await mysql.createConnection(config);
+        const [rows] = await connection.query(`
+            SELECT * FROM Dados
+        `);
+        await connection.end();
+        res.json(rows);
+    } catch (err) {
+        res.status(500).send("Erro ao listar dados.");
+        console.error(err);
+    }
+});
+
 
 
 export default router;
