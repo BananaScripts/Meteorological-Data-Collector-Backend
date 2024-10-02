@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  cod_usuario    Int    @id @default(autoincrement())
+  nome           String
+  dataNascimento String
+  cpf            String
+  email          String
+  senha          String
+}
+
+model Estacao {
+  cod_estacao Int         @id @default(autoincrement())
+  macAdress   String
+  nome        String
+  cidade      String
+  estado      String
+  numero      Int
+  cep         Int
+  Parametro   Parametro[]
+}
+
+model Parametro {
+  cod_parametro     Int           @id @default(autoincrement())
+  cod_estacao       Int
+  estacao           Estacao       @relation(fields: [cod_estacao], references: [cod_estacao])
+  cod_tipoParametro Int
+  tipoParametro     TipoParametro @relation(fields: [cod_tipoParametro], references: [cod_tipoParametro])
+
+  Dados   Dados[]
+  Alarmes Alarmes[]
+}
+
+model TipoParametro {
+  cod_tipoParametro Int         @id @default(autoincrement())
+  nome              String
+  fator             String
+  offset            String
+  unidadeMedida     String
+  Parametro         Parametro[]
+}
+
+model Dados {
+  cod_dados     Int       @id @default(autoincrement())
+  cod_parametro Int
+  parametro     Parametro @relation(fields: [cod_parametro], references: [cod_parametro])
+}
+
+model Alarmes {
+  cod_alarme      Int               @id @default(autoincrement())
+  nome            String
+  valor           String
+  condicao        String
+  cod_parametro   Int
+  parametro       Parametro         @relation(fields: [cod_parametro], references: [cod_parametro])
+  HistoricoAlarme HistoricoAlarme[]
+}
+
+model HistoricoAlarme {
+  cod_historicoAlarme Int     @id @default(autoincrement())
+  valor               String
+  data                String
+  hora                String
+  cod_alarme          Int
+  alarme              Alarmes @relation(fields: [cod_alarme], references: [cod_alarme])
+}
