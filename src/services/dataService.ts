@@ -12,14 +12,12 @@ export const buscarDado = async(cod_dados: number):Promise<Dados | null> =>{
     })
 }
 
-/* Revisar dados que devem ser cadastrados */
 export const cadastrarDado = async(cod_parametro: number):Promise<Dados> =>{
     return prisma.dados.create({
         data: {cod_parametro}
     })
 }
 
-/* Revisar dados que podem ser atualizados */
 export const atualizarEstacaoDado = async(cod_dados:number, cod_parametro:number):Promise<Dados> =>{
     return prisma.dados.update({
         where: {cod_dados},

@@ -12,13 +12,11 @@ export const buscarAlarme = async(cod_alarme: number):Promise<Alarmes | null> =>
         where: {cod_alarme},
     });
 }
-/* Revisar */
 export const cadastrarAlarme = async(nome: string, valor: string, condicao: string, cod_parametro: number):Promise<Alarmes>=>{
     return prisma.alarmes.create({
         data:{nome, valor, condicao, cod_parametro}
     })
 }
-/* Revisar */
 export const atualizarAlarme = async(cod_alarme: number, nome: string, valor: string, condicao: string, cod_parametro: number):Promise<Alarmes>=>{
     return prisma.alarmes.update({
         where: {cod_alarme},

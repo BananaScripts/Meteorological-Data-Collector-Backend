@@ -12,13 +12,13 @@ export const buscarEstacao = async (cod_estacao: number): Promise<Estacao | null
     });
 }
 
-/* Revisar "Parametro[]" */
+
 export const cadastrarEstacao = async(macAdress: string, nome: string, cidade: string, estado: string, numero: number, cep: number): Promise<Estacao> =>{
     return prisma.estacao.create({
         data: {macAdress, nome, cidade, estado, numero, cep},
     })
 }
-/* Revisar "Parametro[]" */
+
 export const atualizarEstacao = async(cod_estacao:number, macAdress: string, nome: string, cidade: string, estado: string, numero: number, cep: number): Promise<Estacao> =>{
     return prisma.estacao.update({
         where: {cod_estacao},
