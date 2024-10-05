@@ -2,7 +2,7 @@ import { PrismaClient, Dados } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const ListarDado = async():Promise<Dados[]> =>{
+export const listarDado = async():Promise<Dados[]> =>{
     return prisma.dados.findMany();
 }
 
@@ -18,14 +18,14 @@ export const cadastrarDado = async(cod_parametro: number):Promise<Dados> =>{
     })
 }
 
-export const atualizarEstacaoDado = async(cod_dados:number, cod_parametro:number):Promise<Dados> =>{
+export const atualizarDado = async(cod_dados:number, cod_parametro:number):Promise<Dados> =>{
     return prisma.dados.update({
         where: {cod_dados},
         data: {cod_parametro},
     })
 }
 
-export const deleteDado = async(cod_dados: number):Promise<Dados> =>{
+export const deletarDado = async(cod_dados: number):Promise<Dados> =>{
     return prisma.dados.delete({
         where: {cod_dados}
     })
