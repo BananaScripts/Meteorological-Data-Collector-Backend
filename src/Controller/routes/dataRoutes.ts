@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { listarDados, buscarDados, cadastrarDados, atualizarDados, deletarDados } from "../controllers/dataController";
+import { listarDados, buscarDados, cadastrarDados, atualizarDados, deletarDados } from "../controles/dataController";
 
 const router = Router();
 

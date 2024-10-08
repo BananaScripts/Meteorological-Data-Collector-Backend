@@ -1,4 +1,4 @@
-import { listarTiposParametros, buscarTiposParametros, cadastrarTiposParametros, atualizarTiposParametros, deletarTiposParametros } from "../controllers/paramTypeController";
+import { listarTiposParametros, buscarTiposParametros, cadastrarTiposParametros, atualizarTiposParametros, deletarTiposParametros } from "../controles/paramTypeController";
 import { Router } from "express";
 
 const router = Router();
