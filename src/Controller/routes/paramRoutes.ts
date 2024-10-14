@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { listarParametros, buscarParametros, cadastrarParametros, atualizarParametros, deletarParametros } from "../controllers/paramController";
+import { listarParametros, buscarParametros, cadastrarParametros, atualizarParametros, deletarParametros } from "../controles/paramController";
 
 const router = Router();
 
