@@ -39,13 +39,25 @@ export const loginUsuario = async (
     }
     const senhaDoPrisma = prisma.usuario.senha   
     const senha = req.body.senhaUsuario;
-    if (senhaDoPrisma === senha) {
+    if (senhaDoPrisma != senha) {
       res.status(401).json({ msg: "Senha incorreta" });
     }
-    res.status(202).json({
-      msg: "Usuário logado com sucesso",
-      usuario: usuario,
-    });
+
+    const token = jwt.sign(
+      {
+        usuario: usuario,
+      },
+        process.env.JWT_PASS ?? "",
+        {
+          expiresIn: "8h",
+        },
+      );
+
+      res.status(202).json({
+        msg: "Usuário logado com sucesso",
+        token:token
+      });
+    
   } catch (error) {
     next(error);
   }
