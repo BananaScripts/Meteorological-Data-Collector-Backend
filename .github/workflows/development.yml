@@ -14,7 +14,9 @@ jobs:
 
     steps:
     - name: Instalar Dependências
-      run: npm install      
+      run: |
+        cd src
+        npm install      
     
     - name: Iniciar Submodulo
       run: |
@@ -32,7 +34,6 @@ jobs:
         echo 'DIRECT_URL="postgresql://postgres.kwkjauwkoplxiioaqdwd:codeApiSeth%2301@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
         echo 'DATABASE_URL="postgresql://postgres.kwkjauwkoplxiioaqdwd:codeApiSeth%2301@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
   
-    
     - name: Buildar Projeto
       run: |
         npx prisma generate --schema "./db/src/prisma/schema.prisma"
