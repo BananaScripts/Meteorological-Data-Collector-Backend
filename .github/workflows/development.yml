@@ -42,11 +42,14 @@ jobs:
   
     - name: Iniciar Servidor
       run: |
-        npx prisma generate --schema "./db/src/prisma/schema.prisma"
-        npm run dev
-
+          npx prisma generate --schema "./db/src/prisma/schema.prisma"
+          npm run dev &
+          echo $! > server_pid.txt
+  
     - name: Testar servidor
-      run: curl http://localhost:30105/api/usuarios
-
+      run: |
+          sleep 10
+          curl http://localhost:30105/api/usuarios
+  
     - name: Encerrar servidor
-      run: kill $(jobs -p)
+      run: kill $(cat server_pid.txt)
