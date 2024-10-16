@@ -1,0 +1,47 @@
+name: CI development
+
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
+
+jobs:
+  submodulo:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Instalar Dependências
+      run: npm install      
+    
+    - name: Iniciar Submodulo
+      run: |
+        cd db
+        git submodule init
+        git submodule update
+        
+    - name: Mudar para branch Development no submodulo de BD
+      run: |
+        cd db
+        git checkout Development
+    
+    - name: Criar .env
+      run: |
+        echo 'DIRECT_URL="postgresql://postgres.kwkjauwkoplxiioaqdwd:codeApiSeth%2301@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
+        echo 'DATABASE_URL="postgresql://postgres.kwkjauwkoplxiioaqdwd:codeApiSeth%2301@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
+  
+    
+    - name: Buildar Projeto
+      run: |
+        npx prisma generate --schema "./db/src/prisma/schema.prisma"
+        npm run dev
+
+
+    
+    
+       
+
+    
+
