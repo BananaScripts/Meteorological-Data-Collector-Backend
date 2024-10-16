@@ -7,6 +7,7 @@
     "dev:Controller": "ts-node-dev --respawn --transpile-only src/Controller/server_Controller.ts --port 30105",
     "dev:Keeper": "ts-node-dev --respawn --transpile-only src/Keeper/server_Keeper.ts --port 31005",
     "dev:Simulator": "ts-node-dev --respawn --transpile-only src/Simulator/server_Simulator.ts --port 30020",
+    "dev:Database": "node ./db/src/InitDatabase.js",
     "build": "tsc",
     "update-db": "node updateDB.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,6 +20,8 @@
     "@types/express": "^4.17.21",
     "cors": "^2.8.5",
     "express": "^4.21.0",
+    "pg": "^8.13.0",
+    "readline-sync": "^1.4.10",
     "typescript": "^5.6.2"
   },
   "devDependencies": {
