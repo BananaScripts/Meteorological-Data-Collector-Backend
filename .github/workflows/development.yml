@@ -40,7 +40,13 @@ jobs:
         echo 'DIRECT_URL="postgresql://postgres.kwkjauwkoplxiioaqdwd:codeApiSeth%2301@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
         echo 'DATABASE_URL="postgresql://postgres.kwkjauwkoplxiioaqdwd:codeApiSeth%2301@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
   
-    - name: Buildar Projeto
+    - name: Iniciar Servidor
       run: |
         npx prisma generate --schema "./db/src/prisma/schema.prisma"
         npm run dev
+
+    - name: Testar servidor
+      run: curl http://localhost:30105/api/usuarios
+
+    - name: Encerrar servidor
+      run: kill $(jobs -p)
