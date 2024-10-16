@@ -1,5 +1,5 @@
 import express from "express";
-import { rotasAlarme, rotasDados, rotasEstacao, rotasParametro, rotasTipoParametro, rotasUsuario } from "./routes";
+import { rotasAlarme, rotasDados, rotasEstacao, rotasParametro, rotasTipoParametro, rotasUsuario, rotaLogin } from "./routes";
 
 const app = express();
 
@@ -11,5 +11,6 @@ app.use('/api', rotasParametro);
 app.use('/api', rotasTipoParametro);
 app.use('/api', rotasDados);
 app.use('/api', rotasAlarme);
+app.use('/api', rotaLogin)
 
 export default app;

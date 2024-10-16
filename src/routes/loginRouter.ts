@@ -3,4 +3,6 @@ import {loginUsuario} from "../controllers/loginController"
 
 const router = Router()
 
-router.get("/login", loginUsuario)
+router.post("/login", loginUsuario)
+
+export default router

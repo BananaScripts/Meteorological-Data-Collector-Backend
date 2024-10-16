@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
 
@@ -13,7 +12,7 @@ export const verificarToken = async (
 ) => {
   try {
     const token = req.body.token;
-    const tokenValido = jwt.verify(token ?? "", process.env.JWT_PASS ?? "");
+    const tokenValido = jwt.verify(token ?? "", process.env.JWTPASS ?? "");
     if (tokenValido) {
       res.status(202).json({ msg: "Token válido", tokenValido });
     }
@@ -30,34 +29,33 @@ export const loginUsuario = async (
 ) => {
   try {
     const usuario = await prisma.usuario.findUnique({
-      where: {
-        email: req.body.email,
-      },
+      where: {cpf:req.body.cpf},
     });
     if (!usuario) {
-      res.status(404).json({ msg: "Usuário não encontrado" });
+      res.status(404).send("Usuario não encontrado");
     }
-    const senhaDoPrisma = prisma.usuario.senha   
-    const senha = req.body.senhaUsuario;
-    if (senhaDoPrisma != senha) {
+    const usuarioSenha = usuario?.senha;
+    const senha = req.body.senha;
+    if (usuarioSenha != senha) {
       res.status(401).json({ msg: "Senha incorreta" });
     }
-
-    const token = jwt.sign(
-      {
-        usuario: usuario,
-      },
-        process.env.JWT_PASS ?? "",
+    else {
+      const token = jwt.sign(
+        {
+          usuario: usuario,
+        },
+        process.env.JWTPASS ?? "",
         {
           expiresIn: "8h",
         },
       );
-
       res.status(202).json({
         msg: "Usuário logado com sucesso",
-        token:token
+        usuario: usuario,
+        token: token
+        
       });
-    
+    }
   } catch (error) {
     next(error);
   }
