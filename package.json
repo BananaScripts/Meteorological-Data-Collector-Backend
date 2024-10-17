@@ -2,10 +2,12 @@
   "name": "meteorological-data-collector-backend",
   "version": "1.0.0",
   "scripts": {
-    "dev": "ts-node-dev src/Controller/server.ts && ts-node-dev src/Simulator/server.ts && ts-node-dev src/Collector/server.ts",
-    "dev:controler": "ts-node-dev src/Controller/server.ts",
-    "dev:simulator": "ts-node-dev src/Simulator/server.ts",
-    "dev:collector": "ts-node-dev src/Collector/server.ts",
+    "dev": "npx prisma generate --schema \"./db/src/prisma/schema.prisma\" && \"npm run dev:Collector\" \"npm run dev:Controller\" \"npm run dev:Keeper\" \"npm run dev:Simulator\"",
+    "dev:Collector": "ts-node-dev --respawn --transpile-only src/Collector/server_Collector.ts --port 30015",
+    "dev:Controller": "ts-node-dev --respawn --transpile-only src/Controller/server_Controller.ts --port 30105",
+    "dev:Keeper": "ts-node-dev --respawn --transpile-only src/Keeper/server_Keeper.ts --port 31005",
+    "dev:Simulator": "ts-node-dev --respawn --transpile-only src/Simulator/server_Simulator.ts --port 30020",
+    "dev:Database": "node ./db/src/InitDatabase.js",
     "build": "tsc",
     "update-db": "node updateDB.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,13 +24,16 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "mongodb": "^6.9.0",
+    "pg": "^8.13.0",
+    "readline-sync": "^1.4.10",
     "typescript": "^5.6.2"
   },
   "devDependencies": {
-    "@prisma/client": "^5.20.0",
+    "@prisma/client": "^5.21.0",
     "@types/cors": "^2.8.17",
     "@types/node": "^22.5.5",
-    "prisma": "^5.20.0",
+    "concurrently": "^8.0.1",
+    "prisma": "^5.21.0",
     "ts-node-dev": "^2.0.0"
   }
 }
