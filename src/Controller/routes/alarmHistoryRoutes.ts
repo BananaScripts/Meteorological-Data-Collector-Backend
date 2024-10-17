@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { listarHistAlarmes, buscarHistAlarmes, cadastrarHistAlarmes, atualizarHistAlarmes, deletarHistAlarmes } from "../controles/alarmHistoryController";
+import { listarHistAlarmes, buscarHistAlarmes, cadastrarHistAlarmes, atualizarHistAlarmes, deletarHistAlarmes } from "../controllers/alarmHistoryController";
 
 const router = Router();
 

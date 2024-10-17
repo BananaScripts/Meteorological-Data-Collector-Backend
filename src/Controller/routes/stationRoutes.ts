@@ -1,4 +1,5 @@
-import { listarEstacoes, buscarEstacoes, cadastrarEstacoes, atualizarEstacoes, deletarEstacoes } from "../controles/stationController";
+
+import { listarEstacoes, buscarEstacoes, cadastrarEstacoes, atualizarEstacoes, deletarEstacoes } from "../controllers/stationController";
 import { Router } from "express";
 
 const router = Router();
