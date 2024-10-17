@@ -49,7 +49,7 @@ jobs:
     - name: Testar servidor
       run: |
           sleep 10
-          curl http://localhost:3105/api/usuarios
+          curl http://localhost:30105/api/usuarios
   
     - name: Encerrar servidor
       run: kill $(cat server_pid.txt)
