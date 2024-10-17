@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "concurrently -n Database,Collector,Controller,Keeper,Simulator \"npm run dev:Database\" \"npm run dev:Simulator \" \"npm run dev:Keeper\" \"npm run dev:Controller \" \"npm run dev:Collector\"",
-    "dev:Collector": "ts-node-dev --respawn --transpile-only src/Collector/server.ts --port 30015",
+    "dev:Collector": "ts-node-dev src/Collector/server.ts --port 30015",
     "dev:Controller": "ts-node-dev --respawn --transpile-only src/Controller/server.ts --port 30105",
     "dev:Keeper": "ts-node-dev --respawn --transpile-only src/Keeper/server.ts --port 31005",
-    "dev:Simulator": "ts-node-dev --respawn --transpile-only src/Simulator/server.ts",
+    "dev:Simulator": "ts-node-dev src/Simulator/server.ts",
     "dev:Database": "npx prisma generate --schema \"./db/src/prisma/schema.prisma\"",
     "build": "tsc",
     "update-db": "node updateDB.js",
@@ -24,6 +24,7 @@
     "express": "^4.21.1",
     "migrate": "^2.1.0",
     "mongodb": "^6.9.0",
+    "mongosh": "^2.3.2",
     "pg": "^8.13.0",
     "readline-sync": "^1.4.10",
     "typescript": "^5.6.2"

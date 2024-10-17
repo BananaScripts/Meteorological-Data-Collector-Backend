@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import { connectToDatabase } from './mongodb'; 
 
+
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -15,7 +17,7 @@ app.post('/data', async (req: Request, res: Response) => {
 
     try {
         const db = await connectToDatabase(); 
-        const collection = db.collection('Dados'); // nome da coleção do MongoDB
+        const collection = db.collection('Data'); // nome da coleção do MongoDB
         
         
         const result = await collection.insertOne(data);
