@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { listarAlarmes, buscarAlarmes, cadastrarAlarmes, atualizarAlarmes, deletarAlarmes } from "../controllers/alarmController";
 
+
 const router = Router();
 
 router.get('/alarmes', listarAlarmes);
