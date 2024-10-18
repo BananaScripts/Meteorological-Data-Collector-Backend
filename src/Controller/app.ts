@@ -1,7 +1,10 @@
 import express from "express";
+import cors from "cors";
 import { rotasAlarme, rotasDados, rotasEstacao, rotasParametro, rotasTipoParametro, rotasUsuario } from "./routes";
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
