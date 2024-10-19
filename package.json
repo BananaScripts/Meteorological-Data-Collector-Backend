@@ -9,6 +9,7 @@
     "dev:Simulator": "ts-node-dev src/Simulator/server.ts",
     "dev:Database": "npx prisma generate --schema \"./db/src/prisma/schema.prisma\"",
     "build": "tsc",
+    "start": "ts-node src/index.ts",
     "update-db": "node updateDB.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
