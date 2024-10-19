@@ -44,7 +44,7 @@ export const loginUsuario = async (
         {
           usuario: usuario,
         },
-        process.env.JWTPASS ?? "",
+        process.env.JWTPASS || "default_secret",
         {
           expiresIn: "8h",
         },

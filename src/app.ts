@@ -1,9 +1,12 @@
 import express from "express";
 import { rotasAlarme, rotasDados, rotasEstacao, rotasParametro, rotasTipoParametro, rotasUsuario, rotaLogin } from "./routes";
 
+const cors = require('cors')
 const app = express();
 
 app.use(express.json());
+app.use(cors())
+
 
 app.use('/api', rotasUsuario);
 app.use('/api', rotasEstacao);
