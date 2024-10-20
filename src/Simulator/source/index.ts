@@ -9,7 +9,7 @@ import payload_Estacao03 from './simuladorEstacao03';
 
 dotenv.config();
 
-const url = 'http://127.0.0.1:30015/data';
+const url = 'http://localhost:30015/data';
 
 const headers = {
     'x-api-key': 'jkfndasybfdqa783hdwqa87dhaw7hda78sh612',
