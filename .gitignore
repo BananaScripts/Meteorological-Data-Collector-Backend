@@ -5,6 +5,7 @@
 /prisma-module/node_modules/
 /.pnp
 .pnp.js
+.env
 
 # testing
 /coverage
