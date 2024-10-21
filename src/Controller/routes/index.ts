@@ -5,5 +5,6 @@ import rotasTipoParametro from "./paramTypeRoutes"
 import rotasDados from "./dataRoutes";
 import rotasHistAlarme from "./alarmHistoryRoutes";
 import rotasAlarme from "./alarmRoutes";
+import rotaLogin from "./loginRouter"
 
-export {rotasUsuario, rotasEstacao, rotasParametro, rotasTipoParametro, rotasDados, rotasHistAlarme, rotasAlarme};
+export {rotasUsuario, rotasEstacao, rotasParametro, rotasTipoParametro, rotasDados, rotasHistAlarme, rotasAlarme, rotaLogin};
