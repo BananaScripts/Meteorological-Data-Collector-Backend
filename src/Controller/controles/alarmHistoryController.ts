@@ -26,9 +26,9 @@ export const buscarHistAlarmes = async(req: Request, res:Response) =>{
 }
 
 export const cadastrarHistAlarmes = async(req: Request, res:Response) =>{
-    const {valor, unixtime, cod_alarme} = req.body;
+    const {valor, data, hora, cod_alarme} = req.body;
     try{
-        await cadastrarHistAlarme(valor, unixtime, cod_alarme);
+        await cadastrarHistAlarme(valor, data, hora, cod_alarme);
         res.status(201).send("Histórico de alarme cadastrado com sucesso.")
     }
     catch(error){
@@ -39,13 +39,13 @@ export const cadastrarHistAlarmes = async(req: Request, res:Response) =>{
 
 export const atualizarHistAlarmes = async(req: Request, res:Response) =>{
     const cod_historicoAlarme = parseInt(req.params.cod_historicoAlarme);
-    const {valor, unixtime, cod_alarme} = req.body;
+    const {valor, data, hora, cod_alarme} = req.body;
     try{
         const hAlarme = buscarHistAlarme(cod_historicoAlarme);
         if(!hAlarme){
             return res.status(404).send("Histórico de alarme não encontrado.")
         }
-        await atualizarHistAlarme(cod_historicoAlarme, valor, unixtime, cod_alarme)
+        await atualizarHistAlarme(cod_historicoAlarme, valor, data, hora, cod_alarme)
         res.status(200).send("Histórico de alarme atualizado com sucesso.")
     }
     catch(error){
