@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 import { connectToDatabase } from "../mongodb";
-import * as time from 'node:timers/promises';
 
 const prisma = new PrismaClient();
 
