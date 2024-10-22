@@ -9,6 +9,7 @@ async function mongoProPrisma() {
         const collection = db.collection('Data');
 
         const mongoData = await collection.find({}).toArray();
+        console.log('Dados do MongoDB:', mongoData);
 
         for (const item of mongoData) {
             let estacao = await prisma.estacao.findUnique({
@@ -29,10 +30,10 @@ async function mongoProPrisma() {
             }
 
             const parametros = [
-                { tipo: 'chuva', valor: item.plu },
-                { tipo: 'umidade', valor: item.umi },
-                { tipo: 'temperatura', valor: item.tem },
-                { tipo: 'pressao', valor: item.prs },
+                { tipo: 'Chuva', valor: item.plu },
+                { tipo: 'Umidade', valor: item.umi },
+                { tipo: 'Temperatura', valor: item.tem },
+                { tipo: 'Pressao', valor: item.prs },
             ];
 
             for (const param of parametros) {
@@ -61,6 +62,8 @@ async function mongoProPrisma() {
                         });
                     }
 
+                    console.log(`Inserindo dados para ${param.tipo}:`, param.valor);
+
                     await prisma.dados.create({
                         data: {
                             cod_parametro: parametro.cod_parametro,
@@ -68,18 +71,21 @@ async function mongoProPrisma() {
                             unixtime: item.uxt
                         }
                     });
+                } else {
+                    console.error(`Tipo de parâmetro não encontrado: ${param.tipo}`);
                 }
             }
         }
 
         console.log('Dados sincronizados com sucesso!');
-    } catch (error) {
-        console.error('Erro ao sincronizar dados:', error);
+    } catch (e) {
+        console.error('Erro ao sincronizar dados:', e);
     } finally {
         await prisma.$disconnect();
     }
 
     setTimeout(mongoProPrisma, 10000);
 }
+
 
 export { mongoProPrisma };
