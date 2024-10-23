@@ -30,3 +30,14 @@ export const deletarDado = async(cod_dados: number):Promise<Dados> =>{
         where: {cod_dados}
     })
 }
+
+export const buscarDadosEntreIDs = async(idInicial: number, idFinal: number): Promise<Dados[]> => {
+    return prisma.dados.findMany({
+        where: {
+            cod_dados: {
+                gte: idInicial,
+                lte: idFinal
+            }
+        }
+    });
+}
