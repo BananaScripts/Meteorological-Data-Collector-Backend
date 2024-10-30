@@ -12,16 +12,16 @@ export const buscarTipoParametro = async(cod_tipoParametro: number):Promise<Tipo
     });
 }
 
-export const cadastrarTipoParametro = async(nome: string, fator: string, offset: string, unidadeMedida: string):Promise<TipoParametro>=>{
+export const cadastrarTipoParametro = async(nome: string, fator: string, offset: string, unidadeMedida: string, json: string):Promise<TipoParametro>=>{
     return prisma.tipoParametro.create({
-        data:{nome, fator, offset, unidadeMedida}
+        data:{nome, fator, offset, unidadeMedida, json}
     });
 }
 
-export const atualizarTipoParametro = async(cod_tipoParametro:number, nome: string, fator: string, offset: string, unidadeMedida: string):Promise<TipoParametro>=>{
+export const atualizarTipoParametro = async(cod_tipoParametro:number, nome: string, fator: string, offset: string, unidadeMedida: string, json: string):Promise<TipoParametro>=>{
     return prisma.tipoParametro.update({
         where: {cod_tipoParametro},
-        data:{nome, fator, offset, unidadeMedida}
+        data:{nome, fator, offset, unidadeMedida, json}
     });
 }
 

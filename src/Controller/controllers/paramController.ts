@@ -29,9 +29,9 @@ export const buscarParametros = async(req: Request, res: Response) =>{
 }
 
 export const cadastrarParametros = async(req: Request, res: Response) =>{
-    const {cod_estacao, cod_tipoParametro} = req.body
+    const {cod_estacao, cod_tipoParametro, estacao} = req.body
     try{
-        await cadastrarParametro(cod_estacao, cod_tipoParametro);
+        await cadastrarParametro(cod_estacao, cod_tipoParametro, estacao);
         res.status(201).send("Parâmetro cadastrado com sucesso.")
     }
     catch(error){

@@ -1,4 +1,4 @@
-import { PrismaClient, Parametro } from "@prisma/client";
+import { PrismaClient, Parametro, Estacao } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -12,7 +12,7 @@ export const buscarParametro = async(cod_parametro:number):Promise<Parametro | n
     })
 }
 
-export const cadastrarParametro = async(cod_estacao:number, cod_tipoParametro: number):Promise<Parametro>=>{
+export const cadastrarParametro = async(cod_estacao:number, cod_tipoParametro: number, estacao: Estacao):Promise<Parametro>=>{
     return prisma.parametro.create({
         data:{cod_estacao, cod_tipoParametro},
     })
