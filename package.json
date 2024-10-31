@@ -9,6 +9,7 @@
     "dev:Simulator": "ts-node-dev src/Simulator/server.ts",
     "DB": "npx prisma generate --schema \"./db/src/prisma/schema.prisma\" && ts-node-dev db/src/RestartDatabase.ts && npx prisma migrate deploy --schema \"./db/src/prisma/schema.prisma\" ",
     "DB:Deploy": "npx prisma generate --schema \"./db/src/prisma/schema.prisma\" && npx prisma migrate deploy --schema \"./db/src/prisma/schema.prisma\" ",
+    "test:DB": "npx prisma generate --schema \"./db/src/prisma/schema.prisma\" && ts-node-dev db/src/Tests/Test_Base.ts",
     "migrate": "npx prisma migrate dev",
     "generate": "npx prisma generate",
     "build": "tsc",
