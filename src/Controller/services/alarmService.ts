@@ -32,6 +32,16 @@ export const deletarAlarme = async(cod_alarme:number):Promise<Alarmes>=>{
 }
 
 export const monitorarDados = async(valorAlvo: number, condicao: 'maior' | 'menor', parametro: number):Promise<void>=>{
+    const intervalo = 60000; // 1 minuto
+
+    await executarVerificacao(valorAlvo, condicao, parametro)
+
+    const timer = setInterval(async()=>{
+        await executarVerificacao(valorAlvo, condicao, parametro)
+    }, intervalo)
+}
+
+const executarVerificacao = async(valorAlvo: number, condicao: 'maior' | 'menor', parametro: number)=>{
     let dados:Array<Dados> = await listarDado();
     for(let dado of dados){
         if(condicao === 'maior' && dado.Valor > valorAlvo){
