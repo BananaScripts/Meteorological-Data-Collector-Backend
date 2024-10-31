@@ -1,4 +1,5 @@
-import { PrismaClient, Alarmes } from "@prisma/client";
+import { PrismaClient, Alarmes, Dados } from "@prisma/client";
+import { listarDado } from "./dataService";
 
 const prisma = new PrismaClient();
 
@@ -28,4 +29,16 @@ export const deletarAlarme = async(cod_alarme:number):Promise<Alarmes>=>{
     return prisma.alarmes.delete({
         where:{cod_alarme},
     })
+}
+
+export const monitorarDados = async(valorAlvo: number, condicao: 'maior' | 'menor', parametro: number):Promise<void>=>{
+    let dados:Array<Dados> = await listarDado();
+    for(let dado of dados){
+        if(condicao === 'maior' && dado.Valor > valorAlvo){
+            await cadastrarAlarme('', dado.Valor.toString(), 'maior que', parametro)
+        }
+        else if(condicao === 'menor' && dado.Valor < valorAlvo){
+            await cadastrarAlarme('Alarme1', dado.Valor.toString(), 'menor que', parametro)
+        }
+    }
 }

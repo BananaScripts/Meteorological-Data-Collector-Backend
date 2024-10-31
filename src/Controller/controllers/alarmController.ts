@@ -1,9 +1,9 @@
 import { Response, Request } from "express";
-import { listarAlarme, buscarAlarme, cadastrarAlarme, atualizarAlarme, deletarAlarme } from "../services/alarmService";
+import { listarAlarme, buscarAlarme, cadastrarAlarme, atualizarAlarme, deletarAlarme, monitorarDados } from "../services/alarmService";
 
 export const listarAlarmes = async(req: Request, res:Response) =>{
     try{
-        const alarmes = listarAlarme();
+        const alarmes = await listarAlarme();
         res.status(200).json(alarmes);
     }
     catch(error){
@@ -15,7 +15,7 @@ export const listarAlarmes = async(req: Request, res:Response) =>{
 export const buscarAlarmes = async(req: Request, res:Response) =>{
     const cod_alarme = parseInt(req.params.cod_alarme)
     try{
-        const alarme = buscarAlarme(cod_alarme);
+        const alarme = await buscarAlarme(cod_alarme);
         if(!alarme){
             return res.status(404).send("Alarme não encontrado.")
         }
@@ -43,7 +43,7 @@ export const atualizarAlarmes = async(req: Request, res:Response) =>{
     const cod_alarme = parseInt(req.params.cod_alarme);
     const {nome, valor, condicao, cod_parametro} = req.body;
     try{
-        const alarme = buscarAlarme(cod_alarme);
+        const alarme = await buscarAlarme(cod_alarme);
         if(!alarme){
             return res.status(404).send("Alarme não encontrado.")
         }
@@ -59,7 +59,7 @@ export const atualizarAlarmes = async(req: Request, res:Response) =>{
 export const deletarAlarmes = async(req: Request, res:Response) =>{
     const cod_alarme = parseInt(req.params.cod_alarme);
     try{
-        const alarme = buscarAlarme(cod_alarme);
+        const alarme = await buscarAlarme(cod_alarme);
         if(!alarme){
             return res.status(404).send("Alarme não encontrado.")
         }
@@ -70,5 +70,16 @@ export const deletarAlarmes = async(req: Request, res:Response) =>{
     catch(error){
         res.status(500).send("Erro ao deletar alarme.")
         console.error(error);
+    }
+}
+
+export const monitorar = async(req: Request, res:Response) =>{
+    const { valorAlvo, condicao, parametro} = req.body
+    try{
+        await monitorarDados(valorAlvo, condicao, parametro)
+        res.status(200).send("Monitoramento iniciado!")
+    }
+    catch(err){
+        console.error(err)
     }
 }
