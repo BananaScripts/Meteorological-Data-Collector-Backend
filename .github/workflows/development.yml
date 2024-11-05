@@ -53,7 +53,7 @@ jobs:
     - name: Rodar Testes
       run: |
         # Extração correta do nome da branch
-        BRANCH_NAME=${GITHUB_REF##*/} # Nome da branch com 'Feat/' ou 'Fix/'
+        BRANCH_NAME=${GITHUB_REF#refs/heads/} # Remove 'refs/heads/' e mantém 'Feat/Implementando-CI' ou 'Fix/BranchName'
 
         echo "Nome da branch: $BRANCH_NAME"
 
