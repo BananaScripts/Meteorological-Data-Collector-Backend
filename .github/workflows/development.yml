@@ -60,11 +60,11 @@ jobs:
         # Rodando testes para a branch 'development'
         if [[ "$BRANCH_NAME" == "development" ]]; then
           echo "Rodando testes para branch development"
-          npm test -- __tests__/unit
+          npm test -- __tests__/unit/controller
         
         # Rodando testes para branches 'Fix/*' ou 'Feat/*'
         elif [[ "$BRANCH_NAME" == Feat/* ]] || [[ "$BRANCH_NAME" == Fix/* ]]; then
-          FEATURE_TEST_DIR="src/__tests__/unit/${BRANCH_NAME//\//-}"
+          FEATURE_TEST_DIR="src/__tests__/unit/tasks/${BRANCH_NAME//\//-}"
           echo "Verificando se os testes existem em: $FEATURE_TEST_DIR"
           
           # Verifica se o diretório de testes da feature existe

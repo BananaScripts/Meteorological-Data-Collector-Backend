@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { cadastrarUsuarios } from '../../../Controller/controles/userController';
+import { cadastrarUsuarios } from '../../../../Controller/controllers/userController';
 import { cadastrarUsuario } from '../../../Controller/services/userService';
 
 // Mocks das funções externas
