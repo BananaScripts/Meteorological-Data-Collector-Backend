@@ -12,7 +12,7 @@ app.get('/', (req: Request, res: Response) => {
     res.send('API de Recepção de Dados');
 });
 
-app.post('/data', async (req: Request, res: Response) => {
+app.post('/SendData', async (req: Request, res: Response) => {
     const data = req.body;
     console.log('Dados recebidos:', data);
 
@@ -26,7 +26,6 @@ app.post('/data', async (req: Request, res: Response) => {
 
         res.status(200).json({ insert: 'true', id: result.insertedId });
     } catch (error) {
-        console.error('Erro ao inserir dados no MongoDB:', error);
         res.status(500).json({ error: 'Erro ao salvar os dados no banco de dados' });
     }
 });
