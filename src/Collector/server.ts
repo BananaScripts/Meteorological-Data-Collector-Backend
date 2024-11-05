@@ -1,4 +1,4 @@
-import app from "./app";
+import app from "./src/app";
 import { sendData_Estacoes } from "../Simulator/source";
 
 const port = process.env.PORT || 30015;
