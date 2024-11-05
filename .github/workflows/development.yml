@@ -37,8 +37,8 @@ jobs:
     
     - name: Criar .env
       run: |
-        echo 'DIRECT_URL="postgresql://postgres.kwkjauwkoplxiioaqdwd:codeApiSeth%2301@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
-        echo 'DATABASE_URL="postgresql://postgres.kwkjauwkoplxiioaqdwd:codeApiSeth%2301@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
+        echo 'DIRECT_URL="postgresql://postgres.otkrzedzgbwgywqjrgwq:codeApiSeth%2301@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
+        echo 'DATABASE_URL="postgresql://postgres.otkrzedzgbwgywqjrgwq:codeApiSeth%2301@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
   
     - name: Iniciar Servidor
       run: |
