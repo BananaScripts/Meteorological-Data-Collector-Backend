@@ -42,7 +42,7 @@ jobs:
   
     - name: Iniciar Servidor
       run: |
-          npx prisma generate --schema "./db/src/prisma/schema.prisma"
+          npm run DB
           npm run dev &
           echo $! > server_pid.txt
   
