@@ -49,28 +49,28 @@ jobs:
       run: |
           npm run dev &
           echo $! > server_pid.txt
-  
-          - name: Rodar Testes
-          run: |
-            BRANCH_NAME=${GITHUB_REF##*/}
+
+    - name: Rodar Testes
+      run: |
+          BRANCH_NAME=${GITHUB_REF##*/}
             
-            if [[ "$BRANCH_NAME" == "development" ]]; then
-              echo "Rodando testes para branch development"
-              npm test -- __tests__/unit
-              
-            elif [[ "$BRANCH_NAME" == Fix/* || "$BRANCH_NAME" == Feat/* ]]; then
-              FEATURE_TEST_DIR="src/__tests__/unit/${BRANCH_NAME//\//-}"
-              if [ -d "$FEATURE_TEST_DIR" ]; then
-                echo "Rodando testes para a branch $BRANCH_NAME em $FEATURE_TEST_DIR"
-                npm test -- $FEATURE_TEST_DIR
-              else
-                echo "Nenuhm teste foi encontrado para $BRANCH_NAME. Pulando."
-              fi
-              
-            elif [[ "$GITHUB_BASE_REF" == "main" && "$GITHUB_HEAD_REF" == "development" ]]; then
-              echo "Rodando testes de integração da branch development para main"
-              npm test -- __tests__/integration
+          if [[ "$BRANCH_NAME" == "development" ]]; then
+            echo "Rodando testes para branch development"
+            npm test -- __tests__/unit
+        
+          elif [[ "$BRANCH_NAME" == Fix/* ]] || [[ "$BRANCH_NAME" == Feat/* ]]; then
+            FEATURE_TEST_DIR="src/__tests__/unit/${BRANCH_NAME//\//-}"
+            if [ -d "$FEATURE_TEST_DIR" ]; then
+              echo "Rodando testes para a branch $BRANCH_NAME em $FEATURE_TEST_DIR"
+              npm test -- $FEATURE_TEST_DIR
+            else
+              echo "Nenhum teste foi encontrado para $BRANCH_NAME. Pulando."
             fi
+      
+          elif [[ "$GITHUB_BASE_REF" == "main" && "$GITHUB_HEAD_REF" == "development" ]]; then
+            echo "Rodando testes de integração da branch development para main"
+            npm test -- __tests__/integration
+          fi
   
     - name: Encerrar servidor
       run: kill $(cat server_pid.txt)
