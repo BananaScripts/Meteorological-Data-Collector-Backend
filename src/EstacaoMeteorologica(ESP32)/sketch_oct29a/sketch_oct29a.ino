@@ -3,6 +3,7 @@
 #include <HTTPClient.h>
 #include <esp_mac.h> 
 
+
 char uid[13];
 
 char *ssid = "Cell_Douglas";
@@ -33,6 +34,7 @@ void setup() {
   pinMode(2, OUTPUT);
   Serial.begin(115200);
   
+
   WiFi.begin(ssid, pwd);
   connectWiFi();
 
@@ -41,18 +43,19 @@ void setup() {
   esp_read_mac(mac, ESP_MAC_WIFI_STA);
   snprintf(uid, sizeof(uid), "%02X%02X%02X%02X%02X%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
+
   
   configTime(gmtOffset, daylight, ntpServer);
   if (!getLocalTime(&timeinfo))
   {
     Serial.println("Erro ao acessar o servidor NTP"); 
   }
-  
 }
 
 float t = 12.0;
 float u = 27.0;
 float p = 32.0;
+
 
 void loop() {
   if (WiFi.status() == WL_CONNECTED)
@@ -83,7 +86,6 @@ void loop() {
       digitalWrite(2, HIGH);
       delay(500);
       digitalWrite(2, LOW);
-      Serial.println(uid);
       Serial.println(http_post.getString());
     }
     else
@@ -102,6 +104,6 @@ void loop() {
   t = t + 0.25;
   u = u + 0.09;
   p = p + 0.17;
-  
+
   delay(30000);
 }
