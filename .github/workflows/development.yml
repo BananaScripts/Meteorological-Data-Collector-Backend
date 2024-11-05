@@ -42,7 +42,6 @@ jobs:
 
     - name: Iniciar Servidor
       run: |
-          npm run DB
           npm run dev &
           echo $! > server_pid.txt
   
