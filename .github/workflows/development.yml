@@ -47,30 +47,38 @@ jobs:
 
     - name: Iniciar Servidor
       run: |
-          npm run dev &
+          npm run dev & 
           echo $! > server_pid.txt
 
     - name: Rodar Testes
       run: |
-          BRANCH_NAME=${GITHUB_REF##*/}
-            
-          if [[ "$BRANCH_NAME" == "development" ]]; then
-            echo "Rodando testes para branch development"
-            npm test -- __tests__/unit
+        # Extração do nome da branch corretamente
+        BRANCH_NAME=$(echo ${GITHUB_REF##*/} | sed 's|refs/heads/||')
+        echo "Nome da branch: $BRANCH_NAME"
+
+        # Rodando testes para a branch 'development'
+        if [[ "$BRANCH_NAME" == "development" ]]; then
+          echo "Rodando testes para branch development"
+          npm test -- __tests__/unit
         
-          elif [[ "$BRANCH_NAME" == Fix/* ]] || [[ "$BRANCH_NAME" == Feat/* ]]; then
-            FEATURE_TEST_DIR="src/__tests__/unit/${BRANCH_NAME//\//-}"
-            if [ -d "$FEATURE_TEST_DIR" ]; then
-              echo "Rodando testes para a branch $BRANCH_NAME em $FEATURE_TEST_DIR"
-              npm test -- $FEATURE_TEST_DIR
-            else
-              echo "Nenhum teste foi encontrado para $BRANCH_NAME. Pulando."
-            fi
-      
-          elif [[ "$GITHUB_BASE_REF" == "main" && "$GITHUB_HEAD_REF" == "development" ]]; then
-            echo "Rodando testes de integração da branch development para main"
-            npm test -- __tests__/integration
+        # Rodando testes para branches 'Fix/*' ou 'Feat/*'
+        elif [[ "$BRANCH_NAME" == Fix/* ]] || [[ "$BRANCH_NAME" == Feat/* ]]; then
+          FEATURE_TEST_DIR="src/__tests__/unit/${BRANCH_NAME//\//-}"
+          echo "Verificando se os testes existem em: $FEATURE_TEST_DIR"
+          
+          # Verifica se o diretório de testes da feature existe
+          if [ -d "$FEATURE_TEST_DIR" ]; then
+            echo "Rodando testes para a branch $BRANCH_NAME em $FEATURE_TEST_DIR"
+            npm test -- $FEATURE_TEST_DIR
+          else
+            echo "Nenhum teste foi encontrado para $BRANCH_NAME. Pulando."
           fi
-  
+
+        # Rodando testes de integração para PRs entre 'development' e 'main'
+        elif [[ "$GITHUB_BASE_REF" == "main" && "$GITHUB_HEAD_REF" == "development" ]]; then
+          echo "Rodando testes de integração da branch development para main"
+          npm test -- __tests__/integration
+        fi
+
     - name: Encerrar servidor
       run: kill $(cat server_pid.txt)
