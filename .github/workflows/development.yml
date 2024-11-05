@@ -52,8 +52,9 @@ jobs:
 
     - name: Rodar Testes
       run: |
-        # Extração do nome da branch corretamente
-        BRANCH_NAME=$(echo ${GITHUB_REF##*/} | sed 's|refs/heads/||')
+        # Extração correta do nome da branch
+        BRANCH_NAME=${GITHUB_REF##*/} # Nome da branch com 'Feat/' ou 'Fix/'
+
         echo "Nome da branch: $BRANCH_NAME"
 
         # Rodando testes para a branch 'development'
@@ -62,7 +63,7 @@ jobs:
           npm test -- __tests__/unit
         
         # Rodando testes para branches 'Fix/*' ou 'Feat/*'
-        elif [[ "$BRANCH_NAME" == Fix/* ]] || [[ "$BRANCH_NAME" == Feat/* ]]; then
+        elif [[ "$BRANCH_NAME" == Feat/* ]] || [[ "$BRANCH_NAME" == Fix/* ]]; then
           FEATURE_TEST_DIR="src/__tests__/unit/${BRANCH_NAME//\//-}"
           echo "Verificando se os testes existem em: $FEATURE_TEST_DIR"
           
