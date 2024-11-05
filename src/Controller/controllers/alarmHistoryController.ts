@@ -26,9 +26,9 @@ export const buscarHistAlarmes = async(req: Request, res:Response) =>{
 }
 
 export const cadastrarHistAlarmes = async(req: Request, res:Response) =>{
-    const {valor, data, hora, cod_alarme} = req.body;
+    const {valor, unixtime, cod_alarme} = req.body;
     try{
-        await cadastrarHistAlarme(valor, data, hora, cod_alarme);
+        await cadastrarHistAlarme(valor, unixtime, cod_alarme);
         res.status(201).send("Histórico de alarme cadastrado com sucesso.")
     }
     catch(error){
