@@ -6,7 +6,7 @@ import connectToDatabaseMongo from './services/mongoConnect';
 const prisma = new PrismaClient();
 
 // Função principal para migrar dados
-export const migrarDadosMongoParaSupabase = async () => {  
+export const migrarDadosMongoParaSupabase = async () => { 
 
     while (true) {
 
@@ -17,6 +17,9 @@ export const migrarDadosMongoParaSupabase = async () => {
         
             try {
             
+                // Obter todos os UIDs das estações no Prisma
+                const estacoes = await prisma.estacao.findMany();
+                const uidsEstacoes = estacoes.map(estacao => estacao.macAdress);
                 
                 const ultimoDado = await collection.find().sort({ _id: -1 }).limit(1).toArray();
                 
@@ -27,14 +30,15 @@ export const migrarDadosMongoParaSupabase = async () => {
             
                 const dadoMongo = ultimoDado[0];
                 
-            
-                // Verificação do UID da estação
-                const uidEsperado = "08D1F999F194";
-                if (dadoMongo.uid !== uidEsperado) {
-                    console.log("UID não corresponde à estação esperada.");
+                // Verificação de similaridade do UID da estação
+                const uidSimilar = uidsEstacoes.find(uidEstacao => 
+                    uidEstacao.includes(dadoMongo.uid) || dadoMongo.uid.includes(uidEstacao)
+                );
+                
+                if (!uidSimilar) {
+                    console.log("Nenhum UID semelhante encontrado para a estação.");
                     return;
                 }
-                
             
                 // Obter os parâmetros do banco de dados relacional
                 const tiposParametros = await prisma.tipoParametro.findMany();
