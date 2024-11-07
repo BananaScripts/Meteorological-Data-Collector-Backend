@@ -2,6 +2,7 @@ import { PrismaClient, Alarmes, Dados, Parametro } from "@prisma/client";
 import { listarDado } from "./dataService";
 import { buscarParametro } from "./param";
 import { buscarTipoParametro } from "./paramType";
+import { cadastrarHistAlarme } from "./alarmHistory";
 
 const prisma = new PrismaClient();
 
@@ -57,13 +58,16 @@ const executarVerificacao = async(nome: string, valorAlvo: number, condicao: 'ma
     for(let dado of dados){
         if(parametro?.cod_tipoParametro === cod_tipoParametro && parametro?.cod_parametro === dado.cod_parametro){
             if(condicao === 'maior' && dado.Valor > valorAlvo){
-                await cadastrarAlarme(nome, dado.Valor.toString(), 'maior que', cod_parametro)
+                let alarme = await cadastrarAlarme(nome, dado.Valor.toString(), 'maior que', cod_parametro)
+                await cadastrarHistAlarme(valorAlvo.toString(), Math.floor(Date.now() / 1000), alarme.cod_alarme)
             }
             else if(condicao === 'menor' && dado.Valor < valorAlvo){
-                await cadastrarAlarme(nome, dado.Valor.toString(), 'menor que', cod_parametro)
+                let alarme = await cadastrarAlarme(nome, dado.Valor.toString(), 'menor que', cod_parametro)
+                await cadastrarHistAlarme(valorAlvo.toString(), Math.floor(Date.now() / 1000), alarme.cod_alarme)
             }
             else if(condicao === 'igual a' && dado.Valor == valorAlvo){
-                await cadastrarAlarme(nome, dado.Valor.toString(), 'igual a', cod_parametro)
+                let alarme = await cadastrarAlarme(nome, dado.Valor.toString(), 'igual a', cod_parametro)
+                await cadastrarHistAlarme(valorAlvo.toString(), Math.floor(Date.now() / 1000), alarme.cod_alarme)
             }
         }
     }
