@@ -2,6 +2,7 @@ import { PrismaClient, Alarmes, Dados, Parametro } from "@prisma/client";
 import { listarDado } from "./dataService";
 import { buscarParametro } from "./param";
 import { buscarTipoParametro } from "./paramType";
+import { cadastrarHistAlarme } from "./alarmHistory";
 
 const prisma = new PrismaClient();
 
@@ -50,20 +51,23 @@ export const monitorarDados = async(nome: string, valorAlvo: number, condicao: '
     }, intervalo)
 }
 
-const executarVerificacao = async(nome: string, valorAlvo: number, condicao: 'maior' | 'menor' | 'igual a', cod_parametro: number, cod_tipoParametro: number)=>{
+export const executarVerificacao = async(nome: string, valorAlvo: number, condicao: 'maior' | 'menor' | 'igual a', cod_parametro: number, cod_tipoParametro: number)=>{
     const dados:Array<Dados> = await listarDado();
     const parametro = await buscarParametro(cod_parametro)
 
     for(let dado of dados){
         if(parametro?.cod_tipoParametro === cod_tipoParametro && parametro?.cod_parametro === dado.cod_parametro){
             if(condicao === 'maior' && dado.Valor > valorAlvo){
-                await cadastrarAlarme(nome, dado.Valor.toString(), 'maior que', cod_parametro)
+                let alarme = await cadastrarAlarme(nome, dado.Valor.toString(), 'maior que', cod_parametro)
+                await cadastrarHistAlarme(valorAlvo.toString(), Math.floor(Date.now() / 1000), alarme.cod_alarme)
             }
             else if(condicao === 'menor' && dado.Valor < valorAlvo){
-                await cadastrarAlarme(nome, dado.Valor.toString(), 'menor que', cod_parametro)
+                let alarme = await cadastrarAlarme(nome, dado.Valor.toString(), 'menor que', cod_parametro)
+                await cadastrarHistAlarme(valorAlvo.toString(), Math.floor(Date.now() / 1000), alarme.cod_alarme)
             }
             else if(condicao === 'igual a' && dado.Valor == valorAlvo){
-                await cadastrarAlarme(nome, dado.Valor.toString(), 'igual a', cod_parametro)
+                let alarme = await cadastrarAlarme(nome, dado.Valor.toString(), 'igual a', cod_parametro)
+                await cadastrarHistAlarme(valorAlvo.toString(), Math.floor(Date.now() / 1000), alarme.cod_alarme)
             }
         }
     }
