@@ -51,7 +51,7 @@ export const monitorarDados = async(nome: string, valorAlvo: number, condicao: '
     }, intervalo)
 }
 
-const executarVerificacao = async(nome: string, valorAlvo: number, condicao: 'maior' | 'menor' | 'igual a', cod_parametro: number, cod_tipoParametro: number)=>{
+export const executarVerificacao = async(nome: string, valorAlvo: number, condicao: 'maior' | 'menor' | 'igual a', cod_parametro: number, cod_tipoParametro: number)=>{
     const dados:Array<Dados> = await listarDado();
     const parametro = await buscarParametro(cod_parametro)
 
