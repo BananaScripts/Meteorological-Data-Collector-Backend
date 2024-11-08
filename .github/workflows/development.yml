@@ -8,15 +8,13 @@ on:
       - Feat/*
   pull_request:
     branches:
-      - main 
-      - development
-      - Fix/*
-      - Feat/*
+      - main
 
 jobs:
   Backend:
     runs-on: ubuntu-latest
 
+    #Build
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -28,7 +26,8 @@ jobs:
 
     - name: Instalar Dependências
       run: npm install      
-
+    
+    #Inciar Banco de Dados
     - name: Iniciar Submodulo
       run: |
         cd db
@@ -40,20 +39,23 @@ jobs:
         cd db
         git checkout Development
     
+    #Definindo Variáveis de Ambiente
     - name: Criar .env
       run: |
         echo 'DIRECT_URL="postgresql://postgres.otkrzedzgbwgywqjrgwq:codeApiSeth%2301@aws-0-us-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
         echo 'DATABASE_URL="postgresql://postgres.otkrzedzgbwgywqjrgwq:codeApiSeth%2301@aws-0-us-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
-
+    
+    #Inciado Servidor
     - name: Iniciar Servidor
       run: |
           npm run dev & 
           echo $! > server_pid.txt
-
+    
+    #Rodar Testes
     - name: Rodar Testes
       run: |
-        # Extração correta do nome da branch
-        BRANCH_NAME=${GITHUB_REF#refs/heads/} # Remove 'refs/heads/' e mantém 'Feat/Implementando-CI' ou 'Fix/BranchName'
+        # Extração  do nome da branch
+        BRANCH_NAME=${GITHUB_REF#refs/heads/}
 
         echo "Nome da branch: $BRANCH_NAME"
 
@@ -80,6 +82,7 @@ jobs:
           echo "Rodando testes de integração da branch development para main"
           npm test -- __tests__/integration
         fi
-
+    
+    #Encerrando Servidor
     - name: Encerrar servidor
       run: kill $(cat server_pid.txt)
