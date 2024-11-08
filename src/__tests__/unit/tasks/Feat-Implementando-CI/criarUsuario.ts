@@ -3,7 +3,7 @@ import { cadastrarUsuarios } from '../../../../Controller/controllers/userContro
 import { cadastrarUsuario } from '../../../../Controller/services/userService';
 
 // Mocks das funções externas
-jest.mock('../../../Controller/services/userService');
+jest.mock('../../../../Controller/services/userService');
 const cadastrarUsuarioMock = cadastrarUsuario as jest.Mock;
 
 describe('cadastrarUsuarios', () => {
