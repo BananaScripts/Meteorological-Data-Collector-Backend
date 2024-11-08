@@ -10,76 +10,104 @@ on:
     branches:
       - main 
       - development
-      - Fix/*
-      - Feat/*
 
 jobs:
-  Backend:
+  Build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout do código
+        uses: actions/checkout@v3
 
-    - name: Configurar Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-    - name: Instalar Dependências
-      run: npm install      
+      - name: Instalar Dependências
+        run: npm install      
 
-    - name: Iniciar Submodulo
-      run: |
-        cd db
-        git submodule init
-        git submodule update
-        
-    - name: Mudar para branch Development no submodulo de BD
-      run: |
-        cd db
-        git checkout Development
-    
-    - name: Criar .env
-      run: |
-        echo 'DIRECT_URL="postgresql://postgres.otkrzedzgbwgywqjrgwq:codeApiSeth%2301@aws-0-us-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
-        echo 'DATABASE_URL="postgresql://postgres.otkrzedzgbwgywqjrgwq:codeApiSeth%2301@aws-0-us-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
+      - name: Buildar o Projeto
+        run: npm run build
 
-    - name: Iniciar Servidor
-      run: |
+  Database:
+    runs-on: ubuntu-latest
+    needs: Build
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Inicializar Submódulo do banco de dados
+        run: |
+          cd db
+          git submodule init
+          git submodule update
+
+      - name: Mudar para branch Development no submódulo de BD
+        run: |
+          cd db
+          git checkout Development
+
+  Environment:
+    runs-on: ubuntu-latest
+    needs: Database
+
+    steps:
+      - name: Criar arquivo .env
+        run: |
+          echo 'DIRECT_URL="postgresql://postgres.otkrzedzgbwgywqjrgwq:codeApiSeth%2301@aws-0-us-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
+          echo 'DATABASE_URL="postgresql://postgres.otkrzedzgbwgywqjrgwq:codeApiSeth%2301@aws-0-us-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
+
+  Server:
+    runs-on: ubuntu-latest
+    needs: Environment
+
+    steps:
+      - name: Iniciar Servidor
+        run: |
           npm run dev & 
           echo $! > server_pid.txt
 
-    - name: Rodar Testes
-      run: |
-        # Extração correta do nome da branch
-        BRANCH_NAME=${GITHUB_REF#refs/heads/} # Remove 'refs/heads/' e mantém 'Feat/Implementando-CI' ou 'Fix/BranchName'
+  Test:
+    runs-on: ubuntu-latest
+    needs: Server
 
-        echo "Nome da branch: $BRANCH_NAME"
+    steps:
+      - name: Extração do nome da branch
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/} # Remove 'refs/heads/' e mantém 'Feat/Implementando-CI' ou 'Fix/BranchName'
+          echo "Nome da branch: $BRANCH_NAME"
 
-        # Rodando testes para a branch 'development'
-        if [[ "$BRANCH_NAME" == "development" ]]; then
-          echo "Rodando testes para branch development"
-          npm test -- __tests__/unit
-        
-        # Rodando testes para branches 'Fix/*' ou 'Feat/*'
-        elif [[ "$BRANCH_NAME" == Feat/* ]] || [[ "$BRANCH_NAME" == Fix/* ]]; then
-          FEATURE_TEST_DIR="src/__tests__/unit/${BRANCH_NAME//\//-}"
-          echo "Verificando se os testes existem em: $FEATURE_TEST_DIR"
-          
-          # Verifica se o diretório de testes da feature existe
-          if [ -d "$FEATURE_TEST_DIR" ]; then
-            echo "Rodando testes para a branch $BRANCH_NAME em $FEATURE_TEST_DIR"
-            npm test -- $FEATURE_TEST_DIR
-          else
-            echo "Nenhum teste foi encontrado para $BRANCH_NAME. Pulando."
-          fi
+      - name: Rodar Testes
+        run: |
+          # Rodando testes para a branch 'development'
+          if [[ "$BRANCH_NAME" == "development" ]]; then
+            echo "Rodando testes para branch development"
+            npm test -- __tests__/unit
 
-        # Rodando testes de integração para PRs entre 'development' e 'main'
-        elif [[ "$GITHUB_BASE_REF" == "main" && "$GITHUB_HEAD_REF" == "development" ]]; then
-          echo "Rodando testes de integração da branch development para main"
-          npm test -- __tests__/integration
-        fi
+          # Rodando testes para branches 'Fix/*' ou 'Feat/*'
+          elif [[ "$BRANCH_NAME" == Feat/* ]] || [[ "$BRANCH_NAME" == Fix/* ]]; then
+            FEATURE_TEST_DIR="src/__tests__/unit/${BRANCH_NAME//\//-}"
+            echo "Verificando se os testes existem em: $FEATURE_TEST_DIR"
+            
+            # Verifica se o diretório de testes da feature existe
+            if [ -d "$FEATURE_TEST_DIR" ]; then
+              echo "Rodando testes para a branch $BRANCH_NAME em $FEATURE_TEST_DIR"
+              npm test -- $FEATURE_TEST_DIR
+            else
+              echo "Nenhum teste foi encontrado para $BRANCH_NAME. Pulando."
+            fi
 
-    - name: Encerrar servidor
-      run: kill $(cat server_pid.txt)
+          # Rodando testes de integração para PRs entre 'development' e 'main'
+          elif [[ "$GITHUB_BASE_REF" == "main" && "$GITHUB_HEAD_REF" == "development" ]]; then
+            echo "Rodando testes de integração da branch development para main"
+            npm test -- __tests__/integration
+
+  Shutdown:
+    runs-on: ubuntu-latest
+    needs: Test
+
+    steps:
+      - name: Encerrar Servidor
+        run: kill $(cat server_pid.txt)
