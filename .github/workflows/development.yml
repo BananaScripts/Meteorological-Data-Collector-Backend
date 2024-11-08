@@ -8,8 +8,7 @@ on:
       - Feat/*
   pull_request:
     branches:
-      - main 
-      - development
+      - main
 
 jobs:
   Backend:
