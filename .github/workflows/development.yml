@@ -62,7 +62,7 @@ jobs:
         # Rodando testes para a branch 'development'
         if [[ "$BRANCH_NAME" == "development" ]]; then
           echo "Rodando testes para branch development"
-          npm test -- __tests__/unit/controller
+          npm test -- __tests__/unit
         
         # Rodando testes para branches 'Fix/*' ou 'Feat/*'
         elif [[ "$BRANCH_NAME" == Feat/* ]] || [[ "$BRANCH_NAME" == Fix/* ]]; then
