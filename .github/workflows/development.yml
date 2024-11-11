@@ -51,7 +51,7 @@ jobs:
           npm run dev & 
           echo $! > server_pid.txt
     
-    #Rodar Testes
+    # Rodar Testes
     - name: Rodar Testes
       run: |
         # Extração  do nome da branch
@@ -59,11 +59,16 @@ jobs:
 
         echo "Nome da branch: $BRANCH_NAME"
 
-        # Rodando testes para a branch 'development'
-        if [[ "$BRANCH_NAME" == "development" ]]; then
+        # Rodando testes de integração para PRs entre 'development' e 'main'
+        if [[ "$GITHUB_BASE_REF" == "main" && "$GITHUB_HEAD_REF" == "development" ]]; then
+          echo "Rodando testes de integração da branch development para main"
+          npm test -- __tests__/integration
+
+        # Rodando testes para a branch 'development' (mas não deve rodar em PR)
+        elif [[ "$BRANCH_NAME" == "development" ]]; then
           echo "Rodando testes para branch development"
           npm test -- __tests__/unit
-        
+
         # Rodando testes para branches 'Fix/*' ou 'Feat/*'
         elif [[ "$BRANCH_NAME" == Feat/* ]] || [[ "$BRANCH_NAME" == Fix/* ]]; then
           FEATURE_TEST_DIR="src/__tests__/unit/tasks/${BRANCH_NAME//\//-}"
@@ -76,12 +81,8 @@ jobs:
           else
             echo "Nenhum teste foi encontrado para $BRANCH_NAME. Pulando."
           fi
-
-        # Rodando testes de integração para PRs entre 'development' e 'main'
-        elif [[ "$GITHUB_BASE_REF" == "main" && "$GITHUB_HEAD_REF" == "development" ]]; then
-          echo "Rodando testes de integração da branch development para main"
-          npm test -- __tests__/integration
         fi
+
     
     #Encerrando Servidor
     - name: Encerrar servidor
