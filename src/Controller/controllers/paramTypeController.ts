@@ -28,9 +28,9 @@ export const buscarTiposParametros = async(req: Request, res: Response) =>{
 }
 
 export const cadastrarTiposParametros = async(req: Request, res: Response) =>{
-    const {nome, fator, offset, unidadeMedida} = req.body
+    const {nome, fator, offset, unidadeMedida, json} = req.body
     try{
-        await cadastrarTipoParametro(nome, fator, offset, unidadeMedida);
+        await cadastrarTipoParametro(nome, fator, offset, unidadeMedida, json);
         res.status(201).send("Tipo de parâmetro cadastrado com sucesso.")
     }
     catch(error){
@@ -41,14 +41,14 @@ export const cadastrarTiposParametros = async(req: Request, res: Response) =>{
 
 export const atualizarTiposParametros = async(req: Request, res: Response) =>{
     const cod_tipoParametro = parseInt(req.params.cod_tipoParametro);
-    const {nome, fator, offset, unidadeMedida} = req.body;
+    const {nome, fator, offset, unidadeMedida, json} = req.body;
     try{
         const tipoParametro = await buscarTipoParametro(cod_tipoParametro);
         if(!tipoParametro){
             return res.status(404).send("Tipo de Parâmetro não encontrado.")
         }
 
-        await atualizarTipoParametro(cod_tipoParametro, nome, fator, offset, unidadeMedida);
+        await atualizarTipoParametro(cod_tipoParametro, nome, fator, offset, unidadeMedida, json);
         res.status(200).send("Tipo de parâmetro atualizado com sucesso.")
     }
     catch(error){

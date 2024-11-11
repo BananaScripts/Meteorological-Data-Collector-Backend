@@ -18,7 +18,7 @@ export const cadastrarHistAlarme = async(valor: string, unixtime: number, cod_al
     });
 }
 
-export const atualizarHistAlarme = async(cod_historicoAlarme:number, valor: string, unixtime: number, cod_alarme: number):Promise<HistoricoAlarme>=>{
+export const atualizarHistAlarme = async(cod_historicoAlarme:number, valor: string, unixtime: number, hora: string, cod_alarme: number):Promise<HistoricoAlarme>=>{
     return prisma.historicoAlarme.update({
         where:{cod_historicoAlarme},
         data:{valor, unixtime, cod_alarme}

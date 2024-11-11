@@ -1,11 +1,11 @@
 {
    "compilerOptions": {
-    "target": "ES6",
-    "module": "CommonJS",
+    "target": "es2017",
+    "module": "commonjs",
     "outDir": "./compiled",
     "strict": true,
     "esModuleInterop": true
    },
-   "include": ["./**/*.ts"],
+   "include": ["./**/*.ts", "db/src/DatabaseChange.js"],
    "exclude": ["node_modules"] 
 }

@@ -4,14 +4,17 @@ on:
   push:
     branches:
       - development
+      - Fix/*
+      - Feat/*
   pull_request:
     branches:
-      - development
+      - main
 
 jobs:
   Backend:
     runs-on: ubuntu-latest
 
+    #Build
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -23,7 +26,8 @@ jobs:
 
     - name: Instalar Dependências
       run: npm install      
-
+    
+    #Inciar Banco de Dados
     - name: Iniciar Submodulo
       run: |
         cd db
@@ -35,21 +39,50 @@ jobs:
         cd db
         git checkout Development
     
+    #Definindo Variáveis de Ambiente
     - name: Criar .env
       run: |
-        echo 'DIRECT_URL="postgresql://postgres.kwkjauwkoplxiioaqdwd:codeApiSeth%2301@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
-        echo 'DATABASE_URL="postgresql://postgres.kwkjauwkoplxiioaqdwd:codeApiSeth%2301@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
-  
+        echo 'DIRECT_URL="postgresql://postgres.otkrzedzgbwgywqjrgwq:codeApiSeth%2301@aws-0-us-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
+        echo 'DATABASE_URL="postgresql://postgres.otkrzedzgbwgywqjrgwq:codeApiSeth%2301@aws-0-us-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true"' >> .env
+    
+    #Inciado Servidor
     - name: Iniciar Servidor
       run: |
-          npx prisma generate --schema "./db/src/prisma/schema.prisma"
-          npm run dev &
+          npm run dev & 
           echo $! > server_pid.txt
-  
-    - name: Testar servidor
+    
+    #Rodar Testes
+    - name: Rodar Testes
       run: |
-          sleep 10
-          curl http://localhost:30105/api/usuarios
-  
+        # Extração  do nome da branch
+        BRANCH_NAME=${GITHUB_REF#refs/heads/}
+
+        echo "Nome da branch: $BRANCH_NAME"
+
+        # Rodando testes para a branch 'development'
+        if [[ "$BRANCH_NAME" == "development" ]]; then
+          echo "Rodando testes para branch development"
+          npm test -- __tests__/unit
+        
+        # Rodando testes para branches 'Fix/*' ou 'Feat/*'
+        elif [[ "$BRANCH_NAME" == Feat/* ]] || [[ "$BRANCH_NAME" == Fix/* ]]; then
+          FEATURE_TEST_DIR="src/__tests__/unit/tasks/${BRANCH_NAME//\//-}"
+          echo "Verificando se os testes existem em: $FEATURE_TEST_DIR"
+          
+          # Verifica se o diretório de testes da feature existe
+          if [ -d "$FEATURE_TEST_DIR" ]; then
+            echo "Rodando testes para a branch $BRANCH_NAME em $FEATURE_TEST_DIR"
+            npm test -- $FEATURE_TEST_DIR
+          else
+            echo "Nenhum teste foi encontrado para $BRANCH_NAME. Pulando."
+          fi
+
+        # Rodando testes de integração para PRs entre 'development' e 'main'
+        elif [[ "$GITHUB_BASE_REF" == "main" && "$GITHUB_HEAD_REF" == "development" ]]; then
+          echo "Rodando testes de integração da branch development para main"
+          npm test -- __tests__/integration
+        fi
+    
+    #Encerrando Servidor
     - name: Encerrar servidor
       run: kill $(cat server_pid.txt)

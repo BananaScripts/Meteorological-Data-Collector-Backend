@@ -12,9 +12,9 @@ export const buscarDado = async(cod_dados: number):Promise<Dados | null> =>{
     })
 }
 
-export const cadastrarDado = async(cod_parametro: number, Valor: number):Promise<Dados> =>{
+export const cadastrarDado = async(cod_parametro: number, Valor: number, unixtime: number):Promise<Dados> =>{
     return prisma.dados.create({
-        data: {cod_parametro, Valor}
+        data: {cod_parametro, Valor, unixtime}
     })
 }
 
