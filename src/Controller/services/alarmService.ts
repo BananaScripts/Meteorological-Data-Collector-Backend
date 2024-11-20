@@ -34,7 +34,7 @@ export const deletarAlarme = async(cod_alarme:number):Promise<Alarmes>=>{
     })
 }
 
-export const monitorarDados = async(nome: string, valorAlvo: number, condicao: 'maior' | 'menor' | 'igual a', cod_parametro: number, cod_tipoParametro: number, tempo: number, tipoTempo: string):Promise<void>=>{
+export const monitorarDados = async(nome: string, valorAlvo: number, condicao: 'maior' | 'menor' | 'igual a', cod_parametro: number, cod_tipoParametro: number, tempo: number, tipoTempo: string, cod_estacao:number):Promise<void>=>{
     let intervalo:number = 60000; // intervalo de 1 minuto
 
     if(tipoTempo === 'Hora'){
@@ -44,19 +44,19 @@ export const monitorarDados = async(nome: string, valorAlvo: number, condicao: '
         intervalo = tempo * 60000
     }
 
-    await executarVerificacao(nome, valorAlvo, condicao, cod_parametro, cod_tipoParametro)
+    await executarVerificacao(nome, valorAlvo, condicao, cod_parametro, cod_tipoParametro, cod_estacao)
 
     setInterval(async()=>{
-        await executarVerificacao(nome, valorAlvo, condicao, cod_parametro, cod_tipoParametro)
+        await executarVerificacao(nome, valorAlvo, condicao, cod_parametro, cod_tipoParametro, cod_estacao)
     }, intervalo)
 }
 
-export const executarVerificacao = async(nome: string, valorAlvo: number, condicao: 'maior' | 'menor' | 'igual a', cod_parametro: number, cod_tipoParametro: number)=>{
+export const executarVerificacao = async(nome: string, valorAlvo: number, condicao: 'maior' | 'menor' | 'igual a', cod_parametro: number, cod_tipoParametro: number, cod_estacao: number)=>{
     const dados:Array<Dados> = await listarDado();
     const parametro = await buscarParametro(cod_parametro)
 
     for(let dado of dados){
-        if(parametro?.cod_tipoParametro === cod_tipoParametro && parametro?.cod_parametro === dado.cod_parametro){
+        if(parametro?.cod_tipoParametro === cod_tipoParametro && parametro?.cod_parametro === dado.cod_parametro && parametro?.cod_estacao === cod_estacao){
             if(condicao === 'maior' && dado.Valor > valorAlvo){
                 let alarme = await cadastrarAlarme(nome, dado.Valor.toString(), 'maior que', cod_parametro)
                 await cadastrarHistAlarme(valorAlvo.toString(), Math.floor(Date.now() / 1000), alarme.cod_alarme)

@@ -3,6 +3,7 @@ import { listarAlarme, buscarAlarme, cadastrarAlarme, atualizarAlarme, deletarAl
 import { buscarParametro, listarParametro } from "../services/param";
 import { buscarTipoParametro } from "../services/paramType";
 import { Parametro } from "@prisma/client";
+import { buscarEstacao } from "../services/stationService";
 
 export const listarAlarmes = async(req: Request, res:Response) =>{
     try{
@@ -77,7 +78,7 @@ export const deletarAlarmes = async(req: Request, res:Response) =>{
 }
 
 export const monitorar = async(req: Request, res:Response) =>{
-    const { nome, valorAlvo, condicao, cod_tipoParametro, tempo, tipoTempo} = req.body
+    const { nome, valorAlvo, condicao, cod_tipoParametro, tempo, tipoTempo, cod_estacao} = req.body
     try{
         let cod_parametro = 0
         const parametros:Array<Parametro> = await listarParametro()
@@ -86,12 +87,15 @@ export const monitorar = async(req: Request, res:Response) =>{
                 cod_parametro = parametro.cod_parametro
             }
         }
-
         const parametroExiste = await buscarParametro(cod_parametro)
         if(!parametroExiste){
             return res.status(404).send("Parâmetro não existe")
         }
-        await monitorarDados(nome, valorAlvo, condicao, cod_parametro, cod_tipoParametro, tempo, tipoTempo)
+        const estacao = await buscarEstacao(cod_estacao)
+        if(!estacao){
+            return res.status(404).send("Estação não existe")
+        }
+        await monitorarDados(nome, valorAlvo, condicao, cod_parametro, cod_tipoParametro, tempo, tipoTempo, estacao.cod_estacao)
         res.status(200).send("Monitoramento iniciado!")
     }
     catch(err){
