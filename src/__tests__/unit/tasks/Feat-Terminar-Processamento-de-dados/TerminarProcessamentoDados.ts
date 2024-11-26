@@ -1,12 +1,12 @@
 import { PrismaClient } from '@prisma/client';
-import connectToDatabaseMongo from '../../..//Kepper/services/mongoConnect';
-import { migrarDadosMongoParaSupabase } from '../../../Kepper/app';
+import connectToDatabaseMongo from '../../../../Kepper/services/mongoConnect';
+import { migrarDadosMongoParaSupabase } from '../../../../Kepper/app';
 import { MongoClient } from 'mongodb';
-import { GetSupabase } from '../../../Kepper/services/suapabaseConnect';
+import { GetSupabase } from '../../../../Kepper/services/suapabaseConnect';
 
 
 jest.mock('@prisma/client');
-jest.mock('./services/mongoConnect');
+jest.mock('../../../../Kepper/services/mongoConnect.ts');
 
 const prisma = new PrismaClient();
 
