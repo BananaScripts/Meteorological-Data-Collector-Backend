@@ -6,7 +6,7 @@ import { GetSupabase } from '../../../../Kepper/services/suapabaseConnect';
 
 
 jest.mock('@prisma/client');
-jest.mock('./services/mongoConnect');
+jest.mock('../../../../Kepper/services/mongoConnect.ts');
 
 const prisma = new PrismaClient();
 
