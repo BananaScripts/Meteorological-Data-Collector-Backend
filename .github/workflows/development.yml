@@ -79,7 +79,8 @@ jobs:
             echo "Rodando testes para a branch $BRANCH_NAME em $FEATURE_TEST_DIR"
             npm test -- $FEATURE_TEST_DIR
           else
-            echo "Nenhum teste foi encontrado para $BRANCH_NAME. Pulando."
+            echo "Nenhum teste foi encontrado para $BRANCH_NAME. Finalizando."
+            exit 1
           fi
         fi
 
