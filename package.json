@@ -2,7 +2,7 @@
   "name": "meteorological-data-collector-backend",
   "version": "1.0.0",
   "scripts": {
-    "dev": "npx prisma generate --schema \"./db/src/prisma/schema.prisma\" && concurrently \"npm:dev:Collector\" \"npm:dev:Controller\" \"npm:dev:Kepper\"",
+    "dev": "concurrently \"npm run dev-app\" \"npm run dev-server\"",
     "dev:Collector": "ts-node-dev src/Collector/server.ts --port 30015",
     "dev:Controller":"ts-node-dev --respawn --transpile-only src/Controller/server.ts --port 30105",
     "dev:Kepper":"ts-node-dev src/Kepper/server.ts",
@@ -16,7 +16,9 @@
     "build": "tsc",
     "start": "ts-node src/index.ts",
     "update-db": "node updateDB.js",
-    "test": "jest "
+    "test": "jest ",
+    "dev-app": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "dev-server": "ts-node-dev --respawn --transpile-only src/server.ts"
   },
   "keywords": [],
   "author": "",

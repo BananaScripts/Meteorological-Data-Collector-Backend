@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seth-backend-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seth-backend-app
+  template:
+    metadata:
+      labels:
+        app: seth-backend-app
+    spec:
+      containers:
+      - name: seth-backend-app
+        image: gcr.io/meteorological-data-collector/seth-backend-app:latest
+        ports:
+        - containerPort: 30015
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: seth-backend-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: seth-backend-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 30015
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seth-backend-server-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seth-backend-server
+  template:
+    metadata:
+      labels:
+        app: seth-backend-server
+    spec:
+      containers:
+      - name: seth-backend-server
+        image: gcr.io/meteorological-data-collector/seth-backend-server:latest
+        ports:
+        - containerPort: 30105
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: seth-backend-server
+spec:
+  type: LoadBalancer
+  selector:
+    app: seth-backend-server
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 30105

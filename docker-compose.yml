@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  seth-backend-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "30015:30015"
+    environment:
+      - NODE_ENV=production
+    command: ["npm", "run", "dev"]
+
+  seth-backend-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "30105:30105"
+    environment:
+      - NODE_ENV=production
+    command: ["npm", "run", "dev"]
