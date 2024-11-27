@@ -67,7 +67,8 @@ export const executarVerificacao = async (cod_alarme: number): Promise<void> => 
       switch (condicao) {
         case 'Maior que':
           if (dado.Valor >= valorAlvo) {
-            await cadastrarHistAlarme(dado.Valor, dado.unixtime, cod_alarme);
+            const dadoALterado = Math.round(dado.Valor as unknown as number * 100) / 100;
+            await cadastrarHistAlarme(dadoALterado, dado.unixtime, cod_alarme);
           } else {
             console.log('Não passou na verificação do alarme:', alarme.nome);
             return;
@@ -75,7 +76,8 @@ export const executarVerificacao = async (cod_alarme: number): Promise<void> => 
           break;
         case 'Menor que':
             if (dado.Valor <= valorAlvo) {
-                await cadastrarHistAlarme(dado.Valor, dado.unixtime, cod_alarme);
+              const dadoALterado = Math.round(dado.Valor as unknown as number * 100) / 100;
+              await cadastrarHistAlarme(dadoALterado, dado.unixtime, cod_alarme);
               } else {
                 console.log('Não passou na verificação do alarme:', alarme.nome);
                 return;
@@ -83,7 +85,8 @@ export const executarVerificacao = async (cod_alarme: number): Promise<void> => 
           break;
         case 'igual a':
             if (dado.Valor == valorAlvo) {
-                await cadastrarHistAlarme(dado.Valor, dado.unixtime, cod_alarme);
+              const dadoALterado = Math.round(dado.Valor as unknown as number * 100) / 100;
+              await cadastrarHistAlarme(dadoALterado, dado.unixtime, cod_alarme);
               } else {
                 console.log('Não passou na verificação do alarme:', alarme.nome);
                 return;
