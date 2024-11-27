@@ -77,28 +77,23 @@ export const deletarAlarmes = async(req: Request, res:Response) =>{
     }
 }
 
-export const monitorar = async(req: Request, res:Response) =>{
-    const { nome, valorAlvo, condicao, cod_tipoParametro, tempo, tipoTempo, cod_estacao} = req.body
-    try{
-        let cod_parametro = 0
-        const parametros:Array<Parametro> = await listarParametro()
-        for(let parametro of parametros){
-            if(parametro.cod_tipoParametro === cod_tipoParametro){
-                cod_parametro = parametro.cod_parametro
-            }
-        }
-        const parametroExiste = await buscarParametro(cod_parametro)
-        if(!parametroExiste){
-            return res.status(404).send("Parâmetro não existe")
-        }
-        const estacao = await buscarEstacao(cod_estacao)
-        if(!estacao){
-            return res.status(404).send("Estação não existe")
-        }
-        await monitorarDados(nome, valorAlvo, condicao, cod_parametro, cod_tipoParametro, tempo, tipoTempo, estacao.cod_estacao)
-        res.status(200).send("Monitoramento iniciado!")
+export const monitorar = async (req: Request, res: Response): Promise<Response> => {
+    const { cod_alarme, tempo, tipoTempo } = req.body;
+
+    const alarme = await buscarAlarme(cod_alarme);
+    if (!alarme) {
+        return res.status(404).send("Alarme não encontrado.");
     }
-    catch(err){
-        console.error(err)
+
+    if (tipoTempo !== 'Hora' && tipoTempo !== 'Minuto') {
+        return res.status(400).send("Tipo de tempo inválido. Deve ser 'Hora' ou 'Minuto'.");
     }
-}
+
+    try {
+        await monitorarDados(cod_alarme, tempo, tipoTempo);
+        return res.status(200).send("Monitoramento iniciado com sucesso.");
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send("Erro ao iniciar monitoramento.");
+    }
+};
