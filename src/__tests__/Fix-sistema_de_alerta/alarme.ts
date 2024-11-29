@@ -9,9 +9,9 @@ jest.mock('@prisma/client', () => ({
     })),
 }));
 
-import { buscarAlarme, cadastrarAlarme } from '../../../Controller/services/alarmService';
-import { cadastrarHistAlarme } from '../../../Controller/services/alarmHistory';
-import { executarVerificacao } from '../../../Controller/services/alarmService';
+import { buscarAlarme, cadastrarAlarme } from '../../Controller/services/alarmService';
+import { cadastrarHistAlarme } from '../../Controller/services/alarmHistory';
+import { executarVerificacao } from '../../Controller/services/alarmService';
 
 // Mock da função buscarAlarme
 jest.mock('../../../Controller/services/alarmService', () => ({
