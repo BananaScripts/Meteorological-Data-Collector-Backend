@@ -30,9 +30,9 @@ export const buscarUsuarios = async(req: Request, res: Response) =>{
 }
 
 export const cadastrarUsuarios = async (req: Request, res: Response) =>{
-    const {nome, dataNascimento, cpf, email, senha} = req.body;
+    const {nome, dataNascimento, cpf, email, senha, role} = req.body;
     try{
-        await cadastrarUsuario(nome, dataNascimento, cpf, email, senha);
+        await cadastrarUsuario(nome, dataNascimento, cpf, email, senha,  role);
         res.status(201).send("Usuário cadastrado com sucesso!");
     }
     catch(error){
@@ -43,13 +43,13 @@ export const cadastrarUsuarios = async (req: Request, res: Response) =>{
 
 export const atualizarUsuarios = async(req: Request, res: Response) =>{
     const cod_usuario = parseInt(req.params.cod_usuario);
-    const {nome, dataNascimento, cpf, email, senha} = req.body;
+    const {nome, dataNascimento, cpf, email, senha, role} = req.body;
     try{
         const usuario = await buscarUsuario(cod_usuario);
         if(!usuario){
             return res.status(404).send("Usuário não encontrado.")
         }
-        await atualizarUsuario(cod_usuario, nome, dataNascimento, cpf, email, senha);
+        await atualizarUsuario(cod_usuario, nome, dataNascimento, cpf, email, senha, role);
         res.status(200).send("Usuário atualizado com sucesso.");
     }
     catch(error){

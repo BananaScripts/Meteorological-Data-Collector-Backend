@@ -11,6 +11,7 @@ describe('User Controller Integration Tests', () => {
     cpf: cpf,
     email: 'teste1'+randomID+'@example.com',
     senha: randomID,
+    role: 'admin'
   };
 
   const updatedUser = {
@@ -19,6 +20,7 @@ describe('User Controller Integration Tests', () => {
     cpf: cpf,
     email: 'teste2'+randomID+'@example.com',
     senha: 'novo'+randomID,
+    role: 'admin'
   };
 
   test('Deve listar usuários (GET /api/usuarios)', async () => {

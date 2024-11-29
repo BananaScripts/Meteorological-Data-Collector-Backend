@@ -14,7 +14,7 @@ import { cadastrarHistAlarme } from '../../../../Controller/services/alarmHistor
 import { executarVerificacao } from '../../../../Controller/services/alarmService';
 
 // Mock da função buscarAlarme
-jest.mock('../../../Controller/services/alarmService', () => ({
+jest.mock('../../../../Controller/services/alarmService', () => ({
     ...jest.requireActual('../../../../Controller/services/alarmService'),
     buscarAlarme: jest.fn(),
 }));
