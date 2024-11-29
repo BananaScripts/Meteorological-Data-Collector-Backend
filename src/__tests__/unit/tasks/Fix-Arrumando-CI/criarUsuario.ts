@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { cadastrarUsuarios } from '../../../Controller/controllers/userController';
-import { cadastrarUsuario } from '../../../Controller/services/userService';
+import { cadastrarUsuarios } from '../../../../Controller/controllers/userController';
+import { cadastrarUsuario } from '../../../../Controller/services/userService';
 
 jest.mock('../../../../Controller/services/userService');
 const cadastrarUsuarioMock = cadastrarUsuario as jest.Mock;
