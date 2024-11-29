@@ -15,7 +15,7 @@ import { executarVerificacao } from '../../../../Controller/services/alarmServic
 
 // Mock da função buscarAlarme
 jest.mock('../../../Controller/services/alarmService', () => ({
-    ...jest.requireActual('../../../Controller/services/alarmService'),
+    ...jest.requireActual('../../../../Controller/services/alarmService'),
     buscarAlarme: jest.fn(),
 }));
 
