@@ -42,7 +42,7 @@ export const cadastrarDados = async (req: Request, res: Response) =>{
 
 export const atualizarDados = async (req: Request, res: Response) =>{
     const cod_dados = parseInt(req.params.cod_dados);
-    const {cod_parametro} = req.body;
+    const {cod_parametro, valor, unixtime} = req.body;
     try{
 
         const dado = buscarDado(cod_dados);
@@ -51,7 +51,7 @@ export const atualizarDados = async (req: Request, res: Response) =>{
         }
 
         
-        await atualizarDado(cod_dados, cod_parametro);
+        await atualizarDado(cod_dados, cod_parametro, valor, unixtime);
         res.status(200).send("Dado atualizado com sucesso.")
     }
     catch(error){
