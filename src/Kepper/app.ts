@@ -51,7 +51,7 @@ export const migrarDadosMongoParaSupabase = async () => {
                         if (tipoParametro) {
                             dadosParaInserir.push({
                                 cod_parametro: tipoParametro.cod_tipoParametro,
-                                Valor: dadoMongo[key],
+                                Valor: parseFloat(dadoMongo[key]),
                                 unixtime: Math.floor(Date.now() / 1000)
                             });
                         }

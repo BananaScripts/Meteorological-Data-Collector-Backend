@@ -11,19 +11,26 @@ export const listarHistAlarmes = async(req: Request, res:Response) =>{
         console.error(error);
     }
 }
-export const buscarHistAlarmes = async(req: Request, res:Response) =>{
-    const cod_historicoAlarme = parseInt(req.params.cod_historicoAlarme);
-    try{
-        const hAlarme = buscarHistAlarme(cod_historicoAlarme);
-        if(!hAlarme){
-            return res.status(404).send("Histórico de alarme não encontrado.")
+export const buscarHistAlarmes = async (req: Request, res: Response): Promise<Response> => {
+    const cod_historicoAlarme = Number(req.params.cod_historicoAlarme);
+
+    if (isNaN(cod_historicoAlarme)) {
+        return res.status(400).send("Código do histórico de alarme inválido.");
+    }
+
+    try {
+        const hAlarme = await buscarHistAlarme(cod_historicoAlarme);
+
+        if (!hAlarme) {
+            return res.status(404).send("Histórico de alarme não encontrado.");
         }
-    }
-    catch(error){
-        res.status(500).send("Erro ao buscar histórico de alarme.")
+
+        return res.status(200).json(hAlarme);
+    } catch (error) {
         console.error(error);
+        return res.status(500).send("Erro ao buscar histórico de alarme.");
     }
-}
+};
 
 export const cadastrarHistAlarmes = async(req: Request, res:Response) =>{
     const {valor, unixtime, cod_alarme} = req.body;
@@ -37,15 +44,16 @@ export const cadastrarHistAlarmes = async(req: Request, res:Response) =>{
     }
 }
 
+
 export const atualizarHistAlarmes = async(req: Request, res:Response) =>{
     const cod_historicoAlarme = parseInt(req.params.cod_historicoAlarme);
-    const {valor, data, hora, cod_alarme} = req.body;
+    const {valor, unixtime, cod_alarme} = req.body;
     try{
         const hAlarme = buscarHistAlarme(cod_historicoAlarme);
         if(!hAlarme){
             return res.status(404).send("Histórico de alarme não encontrado.")
         }
-        await atualizarHistAlarme(cod_historicoAlarme, valor, data, hora, cod_alarme)
+        await atualizarHistAlarme(cod_historicoAlarme, valor, unixtime, cod_alarme)
         res.status(200).send("Histórico de alarme atualizado com sucesso.")
     }
     catch(error){
@@ -54,18 +62,28 @@ export const atualizarHistAlarmes = async(req: Request, res:Response) =>{
     }
 }
 
-export const deletarHistAlarmes = async(req: Request, res:Response) =>{
-    const cod_historicoAlarme = parseInt(req.params.cod_historicoAlarme);
-    try{
-        const hAlarme = buscarHistAlarme(cod_historicoAlarme);
-        if(!hAlarme){
-            return res.status(404).send("Histórico de alarme não encontrado.")
+export const deletarHistAlarmes = async (req: Request, res: Response): Promise<Response> => {
+    const cod_historicoAlarme = Number(req.params.cod_historicoAlarme);
+
+    // Verifica se o código é válido
+    if (isNaN(cod_historicoAlarme)) {
+        return res.status(400).send("Código do histórico de alarme inválido.");
+    }
+
+    try {
+        // Busca o histórico de alarme
+        const hAlarme = await buscarHistAlarme(cod_historicoAlarme);
+
+        if (!hAlarme) {
+            return res.status(404).send("Histórico de alarme não encontrado.");
         }
+
+        // Deleta o histórico de alarme
         await deletarHistAlarme(cod_historicoAlarme);
-        res.status(200).send("Histórico de alarme deletado com sucesso.")
-    }
-    catch(error){
-        res.status(500).send("Erro ao deletar histórico de alarmes.")
+
+        return res.status(200).send("Histórico de alarme deletado com sucesso.");
+    } catch (error) {
         console.error(error);
+        return res.status(500).send("Erro ao deletar histórico de alarmes.");
     }
-}
+};

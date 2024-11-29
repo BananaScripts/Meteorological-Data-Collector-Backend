@@ -11,20 +11,20 @@
     "DB:Restart": "npx prisma generate --schema \"./db/src/prisma/schema.prisma\" && ts-node-dev db/src/RestartDatabase.ts",
     "DB:Deploy": "npx prisma generate --schema \"./db/src/prisma/schema.prisma\" && npx prisma migrate deploy --schema \"./db/src/prisma/schema.prisma\" ",
     "Test:DB": "npx prisma generate --schema \"./db/src/prisma/schema.prisma\" && ts-node-dev db/src/Tests/Test_Base.ts",
+    "test:integration": "jest --testPathPattern=src/__tests__/integration",
     "migrate": "npx prisma migrate dev",
     "generate": "npx prisma generate",
     "build": "tsc",
     "start": "ts-node src/index.ts",
     "update-db": "node updateDB.js",
-    "test": "jest "
-  },
+    "test": "jest --max-old-space-size=8192 --runInBand  " 
+  }, 
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
-    "@types/jest": "^29.5.14",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
@@ -38,20 +38,25 @@
     "mongosh": "^2.3.2",
     "pg": "^8.13.0",
     "readline-sync": "^1.4.10",
-    "ts-jest": "^29.2.5",
     "typescript": "^5.6.2"
   },
   "devDependencies": {
     "@prisma/client": "^5.21.1",
     "@types/cors": "^2.8.17",
     "@types/jsonwebtoken": "^9.0.7",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.5.5",
     "@types/pg": "^8.11.10",
     "@types/readline-sync": "^1.4.8",
+    "@types/supertest": "^6.0.2",
     "concurrently": "^8.0.1",
+    "jest": "^29.7.0",
     "prisma": "^5.21.1",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
     "ts-node-dev": "^2.0.0"
   },
+
   "main": "index.js",
   "description": ""
 }

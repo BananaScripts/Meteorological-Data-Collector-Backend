@@ -13,15 +13,17 @@ export const buscarDado = async(cod_dados: number):Promise<Dados | null> =>{
 }
 
 export const cadastrarDado = async(cod_parametro: number, Valor: number, unixtime: number):Promise<Dados> =>{
+    Valor = Math.round(Valor * 100) / 100;
     return prisma.dados.create({
         data: {cod_parametro, Valor, unixtime}
     })
 }
 
-export const atualizarDado = async(cod_dados:number, cod_parametro:number):Promise<Dados> =>{
+export const atualizarDado = async(cod_dados: number, cod_parametro: number, Valor: number, unixtime: number):Promise<Dados> =>{
+    Valor = Math.round(Valor * 100) / 100;
     return prisma.dados.update({
         where: {cod_dados},
-        data: {cod_parametro},
+        data: {cod_parametro, Valor, unixtime},
     })
 }
 
