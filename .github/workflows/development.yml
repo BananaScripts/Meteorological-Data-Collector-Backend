@@ -90,3 +90,90 @@ jobs:
     #Encerrando Servidor
     - name: Encerrar servidor
       run: kill $(cat server_pid.txt)
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Autenticar com o Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Configurar Google Cloud CLI
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+    - name: Verificar a autenticação
+      run: |
+        gcloud auth list
+        gcloud config list
+
+    - name: Build e Push da Imagem Docker do App para o Artifact Registry
+      run: |
+        # Definir variáveis do caminho completo da imagem
+        REGION=southamerica-east1
+        PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}
+        REPOSITORY=meteorological-data-collector
+        IMAGE_NAME_APP=meteorological-data-collector-app
+        FULL_IMAGE_PATH_APP=$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME_APP
+
+        # Configurar o Docker para autenticar com o Artifact Registry
+        gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
+
+        # Buildar a imagem Docker do App
+        docker build -t $FULL_IMAGE_PATH_APP:latest -f Dockerfile.app .
+
+        # Push da imagem do App para o Artifact Registry
+        docker push $FULL_IMAGE_PATH_APP:latest
+
+    - name: Build e Push da Imagem Docker do Server para o Artifact Registry
+      run: |
+        # Definir variáveis do caminho completo da imagem
+        REGION=southamerica-east1
+        PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}
+        REPOSITORY=meteorological-data-collector
+        IMAGE_NAME_SERVER=meteorological-data-collector-server
+        FULL_IMAGE_PATH_SERVER=$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME_SERVER
+
+        # Buildar a imagem Docker do Server
+        docker build -t $FULL_IMAGE_PATH_SERVER:latest -f Dockerfile.server .
+
+        # Push da imagem do Server para o Artifact Registry
+        docker push $FULL_IMAGE_PATH_SERVER:latest
+
+    - name: Verificar as Imagens Docker no Artifact Registry
+      run: |
+        IMAGE_PATH_APP=southamerica-east1-docker.pkg.dev/meteorological-data-collector/meteorological-data-collector/meteorological-data-collector-app
+        IMAGE_PATH_SERVER=southamerica-east1-docker.pkg.dev/meteorological-data-collector/meteorological-data-collector/meteorological-data-collector-server
+
+        echo "Verificando se a imagem Docker do App foi empurrada corretamente para o Artifact Registry"
+        echo "Verificando se a imagem Docker do Server foi empurrada corretamente para o Artifact Registry"
+
+    - name: Deploy no Cloud Run
+      run: |
+        REGION=southamerica-east1
+        IMAGE_PATH=southamerica-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/meteorological-data-collector/meteorological-data-collector-app
+
+        gcloud run deploy metereological-data-collector \
+          --image $IMAGE_PATH:latest \
+          --platform managed \
+          --region $REGION \
+          --allow-unauthenticated \
+          --timeout 600
+    
+    - name: Deploy no Cloud Run
+      run: |
+        REGION=southamerica-east1
+        IMAGE_PATH=southamerica-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/meteorological-data-collector/meteorological-data-collector-app
+    
+        gcloud run deploy metereological-data-collector 
+          --image $IMAGE_PATH:latest \
+          --platform managed \
+          --region $REGION \
+          --allow-unauthenticated \
+          --timeout 600
