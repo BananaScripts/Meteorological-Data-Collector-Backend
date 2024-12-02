@@ -4,9 +4,9 @@ import { listarHistAlarmes, buscarHistAlarmes, cadastrarHistAlarmes, atualizarHi
 const router = Router();
 
 router.get('/histAlarmes', listarHistAlarmes)
-router.get('/histAlarme/buscar/:cod_historicoAlarme', buscarHistAlarmes);
+router.get('/histAlarme/:cod_historicoAlarme', buscarHistAlarmes);
 router.post('/histAlarme/cadastrar', cadastrarHistAlarmes);
 router.put('/histAlarme/atualizar/:cod_historicoAlarme', atualizarHistAlarmes);
-router.delete('/histAlarme/deletar/:cod_histoicoAlarme', deletarHistAlarmes);
+router.delete('/histAlarme/deletar/:cod_historicoAlarme', deletarHistAlarmes);
 
 export default router;

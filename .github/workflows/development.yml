@@ -6,6 +6,8 @@ on:
       - development
       - Fix/*
       - Feat/*
+      - fix/*
+      - feat/*
   pull_request:
     branches:
       - main
@@ -70,7 +72,7 @@ jobs:
           npm test -- __tests__/unit
 
         # Rodando testes para branches 'Fix/*' ou 'Feat/*'
-        elif [[ "$BRANCH_NAME" == Feat/* ]] || [[ "$BRANCH_NAME" == Fix/* ]]; then
+        elif [[ "$BRANCH_NAME" == Feat/* ]] || [[ "$BRANCH_NAME" == Fix/* ]] || [[ "$BRANCH_NAME" == feat/* ]] || [[ "$BRANCH_NAME" == fix/* ]]; then
           FEATURE_TEST_DIR="src/__tests__/unit/tasks/${BRANCH_NAME//\//-}"
           echo "Verificando se os testes existem em: $FEATURE_TEST_DIR"
           
@@ -79,7 +81,8 @@ jobs:
             echo "Rodando testes para a branch $BRANCH_NAME em $FEATURE_TEST_DIR"
             npm test -- $FEATURE_TEST_DIR
           else
-            echo "Nenhum teste foi encontrado para $BRANCH_NAME. Pulando."
+            echo "Nenhum teste foi encontrado para $BRANCH_NAME. Finalizando."
+            exit 1
           fi
         fi
 
