@@ -1,11 +1,19 @@
 {
-   "compilerOptions": {
+  "compilerOptions": {
     "target": "es2017",
     "module": "commonjs",
-    "outDir": "./compiled",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
-    "esModuleInterop": true
-   },
-   "include": ["./**/*.ts", "db/src/DatabaseChange.js"],
-   "exclude": ["node_modules"] 
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts", "db/src/DatabaseChange.js"],
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "src/__tests__"
+  ]
 }
